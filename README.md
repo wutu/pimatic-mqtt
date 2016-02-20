@@ -12,17 +12,6 @@ This version supports the following
 * PresenceSensor, ContactSensor
 * Dimmer
 
-## To Do
-
-* Processing json string in payload
-* Make payload configurable for all device
-* ButtonSensor
-* Configurable PWM range for Dimmer
-* Configurable CIE1931 correction for Dimmer
-* Sending all variables from Pimatic to Broker/s
-* Support for more then one Broker
-* Control Pimatic over MQTT
-
 ## Getting Started
 
 This section is still work in progress.
@@ -299,6 +288,17 @@ For Deb wheezy:
   apt-get install mosquitto
   sudo /etc/init.d/mosquitto start
 }
+
+## To Do
+
+* Processing json string in payload
+* Make payload configurable for all device
+* ButtonsDevice
+* Configurable PWM range for Dimmer
+* Configurable CIE1931 correction for Dimmer
+* Sending all variables from Pimatic to Broker/s
+* Support for more then one Broker
+* Control Pimatic over MQTT
 
 ## Credits
 
