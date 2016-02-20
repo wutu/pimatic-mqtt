@@ -16,7 +16,7 @@ module.exports = {
           name:
             description: "Just name for MQTT broker"
             type: "string"
-            default: "MQTT Broker"
+            default: ""
           host:
             description: "The IP or hostname of the MQTT broker (Default: 127.0.0.1)"
             type: "string"

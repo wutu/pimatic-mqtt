@@ -20,24 +20,29 @@ module.exports = (env) ->
   class MqttPlugin extends env.plugins.Plugin
 
     init: (app, @framework, @config) =>
-
-      host = "localhost"
+      host = '127.0.0.1'
       port = 1883
+      username = false
+      password = false
 
-      # for broker, i in @config.brokers
-      #   if broker.id is '0'
-      #     @host = broker.host
-      #     console.log  @host
-      #     @port = broker.port
-      #     @username = broker.username
-      #     @password = broker.password
+      for broker, i in @config.brokers
+        if broker.id is '0'
+          host = broker.host or '127.0.0.1'
+          console.log host
+          port = broker.port or 1883
+          username = broker.username or false
+          password = broker.password or false
 
       Connection = new Promise( (resolve, reject) =>
         @mqttclient = new mqtt.connect('mqtt://' + host + ":" + port,
           # keepalive: 120
           clientId: 'pimatic_' + Math.random().toString(16).substr(2, 8)
           reconnectPeriod: 5000
-          connectTimeout: 120000
+          connectTimeout: 50000
+          if username
+            username: username
+          if password
+            password: new Buffer(password)
         )
         @mqttclient.on("connect", resolve)
         @mqttclient.on('error', reject)
@@ -50,7 +55,6 @@ module.exports = (env) ->
 
       @mqttclient.on 'connect', (packet) ->
         if packet.returnCode is 0
-          @connected = true
           env.logger.info "Successful connected to MQTT Broker"
         else
           if @config.debug
@@ -63,24 +67,6 @@ module.exports = (env) ->
       @mqttclient.on 'error', (error) =>
         env.logger.error "connection error: #{error}"
         env.logger.debug error.stack
-
-      @mqttclient.on('message', (topic, message) =>
-        env.logger.debug topic
-      )
-
-      # Simple Emit Device attributes to Mqtt broker - not working for now
-      # @mqttclient.on("connect", () =>
-      #   @framework.on('deviceAttributeChanged', (attrEvent) ->
-      #     env.logger.debug attrEvent.device.config.id
-      #     _name = attrEvent.attributeName.toLowerCase().replace(' ', '_')
-      #     env.logger.debug _name
-      #     _id = attrEvent.device.config.id.toLowerCase()
-      #     env.logger.debug _id
-      #     _value = attrEvent.value.toString()
-      #     console.log _value
-      #     @mqttclient.publish('pimatic/' + _id + '/' + _name, _value)
-      #   )
-      # )
 
       # register devices
       deviceConfigDef = require("./device-config-schema")
