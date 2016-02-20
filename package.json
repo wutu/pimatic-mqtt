@@ -1,0 +1,58 @@
+{
+  "name": "pimatic-mqtt",
+  "description": "MQTT support for Pimatic",
+  "author_name": "Marek Kail",
+  "author_url": "https://github.com/wutu",
+  "npmUser": "wutu",
+  "main": "mqtt",
+  "files": [
+    "mqtt.coffee",
+    "mqtt-config-schema.coffee",
+    "device-config-schema.coffee",
+    "devices",
+    "README.md",
+    "LICENSE"
+  ],
+  "version": "0.8.0",
+  "homepage": "http://github.com/wutu/pimatic-mqtt",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/wutu/pimatic-mqtt.git"
+  },
+  "configSchema": "mqtt-config-schema.coffee",
+  "peerDependencies": {
+    "pimatic": "0.8.*"
+  },
+    "dependencies": {
+    "mqtt": ">=1.1.x",
+    "pimatic-plugin-commons": "^0.8.5"
+  },
+  "engines": {
+    "node": ">0.8.x",
+    "npm": ">1.1.x"
+  },
+  "bugs": {
+    "url": "https://github.com/wutu/pimatic-mqtt/issues"
+  },
+  "keywords": [
+    "pimatic",
+    "mqtt",
+    "subscribe",
+    "publish",
+    "publish/subscribe",
+    "IoT"
+  ],
+  "license": "AGPL-3.0",
+  "_npmVersion": "2.1.5",
+  "_nodeVersion": "0.10.24",
+  "_npmUser": {
+    "name": "wutu",
+    "email": "reg@kail.cz"
+  },
+  "maintainers": [
+    {
+      "name": "wutu",
+      "url": "https://github.com/wutu"
+    }
+  ]
+}
