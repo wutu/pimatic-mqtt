@@ -203,6 +203,15 @@ Code comes from the module pimatic-mqtt-simple. The author is Andre Miller (http
       "offMessage": "0.00"
     }
 
+It has the following configuration properties:
+
+| Property   | Default  | Type    | Description                                 |
+|:-----------|:---------|:--------|:--------------------------------------------|
+| topic      | -        | String  | Topic for device state           |
+| onMessage  | -        | String  | Message to switch on                  |
+| offMessage | -        | String  | Message to switch off                  |
+| stateTopic | -        | String  | Topic that communicates state           |
+
 Device exhibits the following attributes:
 
 | Property      | Unit  | Type    | Acronym | Description                            |
@@ -279,26 +288,27 @@ The following predicates are supported:
 
 For Deb wheezy:
 
-}
-  wget http://repo.mosquitto.org/debian/mosquitto-repo.gpg.key
-  sudo apt-key add mosquitto-repo.gpg.key
-  cd /etc/apt/sources.list.d/
-  sudo wget http://repo.mosquitto.org/debian/mosquitto-wheezy.list
-  apt-get update
-  apt-get install mosquitto
-  sudo /etc/init.d/mosquitto start
-}
+~~~
+wget http://repo.mosquitto.org/debian/mosquitto-repo.gpg.key
+sudo apt-key add mosquitto-repo.gpg.key
+cd /etc/apt/sources.list.d/
+sudo wget http://repo.mosquitto.org/debian/mosquitto-wheezy.list
+apt-get update
+apt-get install mosquitto
+sudo /etc/init.d/mosquitto start
+~~~
 
 ## To Do
 
 * Processing json string in payload
 * Make payload configurable for all device
-* ButtonsDevice
+* Buttons Device
 * Configurable PWM range for Dimmer
 * Configurable CIE1931 correction for Dimmer
-* Sending all variables from Pimatic to Broker/s
 * Support for more then one Broker
+* Sending all variables from Pimatic to Broker/s
 * Control Pimatic over MQTT
+* Integration with ActionProvider
 
 ## Credits
 
