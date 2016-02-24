@@ -283,6 +283,31 @@ The following predicates are supported:
 
 * {device} is opened|closed
 
+### Buttons Device
+
+`MqttSwitch` is based on the ButtonsDevice device class.
+
+    {
+      "class": "MqttButtons",
+      "id": "buttons-demo",
+      "name": "Buttons",
+      "buttons": [
+        {
+          "id": "button1",
+          "text": "Press me",
+          "topic": "some/topic",
+          "message": "1"
+        }
+      ]
+    }
+
+It has the following configuration properties for each button:
+
+| Property   | Default  | Type    | Description                                 |
+|:-----------|:---------|:--------|:--------------------------------------------|
+| topic      | -        | String  | Topic for device state           |
+| message    | -        | String  | Publish message when pressed              |
+
 
 ##Install Mosquitto broker
 
@@ -300,15 +325,15 @@ sudo /etc/init.d/mosquitto start
 
 ## To Do
 
-* Processing json string in payload
-* Make payload configurable for all device
-* Buttons Device
-* Configurable PWM range for Dimmer
-* Configurable CIE1931 correction for Dimmer
-* Support for more then one Broker
-* Sending all variables from Pimatic to Broker/s
-* Control Pimatic over MQTT
-* Integration with ActionProvider
+- [ ] Processing json string in payload
+- [ ] Make payload configurable for all device
+- [x] Buttons Device
+- [ ] Configurable PWM range for Dimmer
+- [ ] Configurable CIE1931 correction for Dimmer
+- [ ] Support for more then one Broker
+- [ ] Sending all variables from Pimatic to Broker/s
+- [ ] Control Pimatic over MQTT
+- [ ] Integration with ActionProvider
 
 ## Credits
 

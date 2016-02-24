@@ -78,4 +78,12 @@ module.exports = {
         type: "boolean"
         default: false
   }
+  MqttButtons: {
+    title: "MqttButtons config options"
+    type: "object"
+    properties:
+      buttons:
+        description: "Attributes of device"
+        type: "array"
+  }
 }
