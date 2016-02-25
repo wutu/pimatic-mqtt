@@ -61,6 +61,7 @@ Devices must be added manually to the device section of your pimatic config.
 
 `MqttSensor` is based on the Sensor device class. Handles numeric and text data from the payload.
 Code comes from the module pimatic-mqtt-simple. The author is Andre Miller (https://github.com/andremiller).
+Also supports lookup table to translate received message to another value.
 
     {
       "class": "MqttSensor",
@@ -188,6 +189,28 @@ Code comes from the module pimatic-mqtt-simple. The author is Andre Miller (http
           "unit": "B",
           "acronym": "Bytes-received"
         }
+      ]
+    },
+    {
+      "class": "MqttSensor",
+      "id": "sensor-with-lookup",
+      "name": "Sensor with lookup",
+      "attributes": [
+        {
+          "name": "state",
+          "topic": "some/topic",
+          "type": "string",
+          "unit": "",
+          "acronym": "",
+          "messageMap": {
+            "0": "Not ready",
+            "1": "Ready",
+            "2": "Completed"
+          }
+        }
+      ]
+    }
+
 
 
 ### Switch Device

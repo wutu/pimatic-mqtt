@@ -36,7 +36,10 @@ module.exports = (env) ->
                 else
                   @emit attr.name, Number(message)
               else
-                @emit attr.name, message.toString()
+                if attr.messageMap && attr.messageMap[message]
+                  @emit attr.name, attr.messageMap[message]
+                else
+                  @emit attr.name, message.toString()
       )
 
       for attr, i in @config.attributes
