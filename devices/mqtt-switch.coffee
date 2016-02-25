@@ -19,7 +19,7 @@ module.exports = (env) ->
       )
 
       @plugin.mqttclient.on('message', (topic, message) =>
-        if config.topic == topic
+        if (@config.stateTopic == "" && @config.topic == topic) || (@config.stateTopic != "" && @config.stateTopic == topic)
           switch message.toString()
             when "on", "true", "1", "t", "o", "1.00"
               @_setState(on)
