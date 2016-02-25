@@ -332,6 +332,23 @@ It has the following configuration properties for each button:
 | message    | -        | String  | Publish message when pressed              |
 
 
+##Rules
+
+You can publish mqtt messages in rules with the action:
+
+`publish mqtt message "<string with variables>" on topic "<string with variables>"`
+
+    "rules": [
+      {
+        "id": "my-rule",
+        "rule": "if every 1 minutes then publish mqtt message \"some message\" on topic \"my/topic\"",
+        "active": true,
+        "logging": false,
+        "name": "Publish mqtt"
+      }
+    ]
+
+
 ##Install Mosquitto broker
 
 For Deb wheezy:
@@ -356,7 +373,7 @@ sudo /etc/init.d/mosquitto start
 - [ ] Support for more then one Broker
 - [ ] Sending all variables from Pimatic to Broker/s
 - [ ] Control Pimatic over MQTT
-- [ ] Integration with ActionProvider
+- [x] Integration with ActionProvider
 
 ## Credits
 
