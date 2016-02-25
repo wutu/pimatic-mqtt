@@ -24,11 +24,11 @@ module.exports = (env) ->
             when "on", "true", "1", "t", "o", "1.00"
               @_setState(on)
               @_state = on
-              @emit @name, on
+              @emit "state", on
             else
               @_setState(off)
               @_state = off
-              @emit @name, off
+              @emit "state", off
       )
       super()
 
