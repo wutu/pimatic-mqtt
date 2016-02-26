@@ -9,8 +9,11 @@ module.exports = (env) ->
       @name = config.name
       @_contact = lastState?.contact?.value or false
 
+      if @plugin.connected
+        @onConnect()
+
       @plugin.mqttclient.on('connect', =>
-        @plugin.mqttclient.subscribe(config.topic)
+        onConnect()
       )
 
       @plugin.mqttclient.on('message', (topic, message) =>
@@ -23,5 +26,8 @@ module.exports = (env) ->
       )
 
       super()
+
+    onConnect: () ->
+      @plugin.mqttclient.subscribe(@config.topic)
 
     getContact: () -> Promise.resolve(@_contact)

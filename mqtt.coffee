@@ -25,6 +25,7 @@ module.exports = (env) ->
       port = 1883
       username = false
       password = false
+      @connected = false
 
       for broker, i in @config.brokers
         if broker.id is '0'
@@ -45,7 +46,10 @@ module.exports = (env) ->
           if password
             password: new Buffer(password)
         )
-        @mqttclient.on("connect", resolve)
+        @mqttclient.on("connect", () =>
+          @connected = true
+          resolve()
+        )
         @mqttclient.on('error', reject)
         return
       ).timeout(50000).catch( (error) ->
@@ -57,11 +61,14 @@ module.exports = (env) ->
       @mqttclient.on 'connect', (packet) ->
         if packet.returnCode is 0
           env.logger.info "Successful connected to MQTT Broker"
+          @connected = true
         else
+          @connected = false
           if @config.debug
             env.logger.debug "Connection error #{packet.returnCode}"
 
       @mqttclient.on('offline', () =>
+        @connected = false
         env.logger.info "MQTT Broker is offline"
       )
 
@@ -127,7 +134,7 @@ module.exports = (env) ->
           if simulate
             return Promise.resolve("publish mqtt message " + strMessage + " on topic " + strTopic)
           else
-            env.logger.info "publish mqtt message " + strMessage + " on topic " + strTopic
+            #env.logger.info "publish mqtt message " + strMessage + " on topic " + strTopic
             @mqttclient.publish(strTopic, strMessage)
             return Promise.resolve("publish mqtt message " + strMessage + " on topic " + strTopic)
         )
