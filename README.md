@@ -11,6 +11,7 @@ This version supports the following
 * Switch
 * PresenceSensor, ContactSensor
 * Dimmer
+* Buttons
 
 ## Getting Started
 
@@ -308,7 +309,7 @@ The following predicates are supported:
 
 ### Buttons Device
 
-`MqttSwitch` is based on the ButtonsDevice device class.
+`MqttButtons` is based on the ButtonsDevice device class.
 
     {
       "class": "MqttButtons",
