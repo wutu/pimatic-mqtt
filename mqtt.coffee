@@ -29,13 +29,10 @@ module.exports = (env) ->
         port: @config.port
         username: @config.username or false
         password: if @config.password then new Buffer(@config.password) else false
-        keepalive: 20
+        keepalive: 180
         clientId: 'pimatic_' + Math.random().toString(16).substr(2, 8)
         reconnectPeriod: 5000
         connectTimeout: 30000
-        will: 
-          topic: 'pimatic/status'
-          payload: new Buffer('dead')
       )
 
       Connection = new Promise( (resolve, reject) =>
@@ -47,7 +44,7 @@ module.exports = (env) ->
         )
         @mqttclient.on('error', reject)
         return
-      ).timeout(50000).catch( (error) ->
+      ).timeout(60000).catch( (error) ->
         env.logger.error "Error on connecting to MQTT Broker #{error.message}"
         env.logger.debug error.stack
         return
@@ -67,7 +64,7 @@ module.exports = (env) ->
 
       @mqttclient.on 'close', () ->
         @connected = false
-        env.logger.info "connected with the MQTT Broker was closed"  
+        env.logger.debug "Connection with MQTT Broker was closed"  
 
       # register devices
       deviceConfigDef = require("./device-config-schema")

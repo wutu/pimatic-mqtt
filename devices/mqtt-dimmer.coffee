@@ -9,6 +9,8 @@ module.exports = (env) ->
       @id = config.id
       @_state = lastState?.state?.value or off
       @_dimlevel = lastState?.dimlevel?.value or 0
+      @resolution = (@config.resolution - 1) or 101
+      @stateTopic = @config.stateTopic or false
 
       if @plugin.connected
         @onConnect()
@@ -17,41 +19,38 @@ module.exports = (env) ->
         @onConnect()
       )
 
-      @plugin.mqttclient.on('message', (topic, message) =>
-        if config.topic == topic
-          switch message.toString()
-            when "on", "true"
-              @_setState(on)
-              @_state = on
-              @emit @name, on
-            else
-              @_setState(off)
-              @_state = off
-              @emit @name, off
-        )
       super()
 
     onConnect: () ->
-      if @config.stateTopic == ""
-        @plugin.mqttclient.subscribe(@config.topic)
-      else
+      @plugin.mqttclient.subscribe(@config.topic)
+      if @stateTopic
         @plugin.mqttclient.subscribe(@config.stateTopic)
 
+    # Convert the PWM resolution by config value
+    # Suppport for CIE correction will be added latter
+    _getDevLevel: (perCentlevel) ->
+      @devLevel = (perCentlevel * (@resolution / 100)).toFixed(0)
+      return @devLevel
+
+    # Convert device resolution value back to percent value
+    _getPerCentlevel: (devlevel) ->
+      @perCentlevel = ((devlevel + 0.5 * 100) / @resolution).toFixed(0)
+      return @perCentlevel
+
     turnOn: ->
-      @plugin.mqttclient.publish(@config.topic, @config.onMessage)
+      if @stateTopic
+        @plugin.mqttclient.publish(@stateTopic, @config.onMessage)
       Promise.resolve()
       
     turnOff: ->
-      @plugin.mqttclient.publish(@config.topic, @config.offMessage)
+      if @stateTopic
+        @plugin.mqttclient.publish(@stateTopic, @config.offMessage)
       Promise.resolve()
 
     changeDimlevelTo: (dimlevel) ->
-      level = (parseFloat(dimlevel) * 10)
-      brightness = level.toString()
-      @plugin.mqttclient.publish(@config.topic, brightness)
+      @_getDevLevel(dimlevel)
+      @plugin.mqttclient.publish(@config.topic, @devLevel)
       @_setDimlevel(dimlevel)
-      Promise.resolve()
-
-    setdimlevel: (brightness) ->
+      return Promise.resolve()
 
     getDimlevel: -> Promise.resolve(@_dimlevel)

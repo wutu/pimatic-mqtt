@@ -57,50 +57,9 @@ Code comes from the module pimatic-mqtt-simple. The author is Andre Miller (http
 Also supports lookup table to translate received message to another value.
 
     {
-      "class": "MqttSensor",
-      "id": "wemosd1r2-2",
-      "name": "Soil Hygrometer analog reading",
-      "attributes": [
-        {
-          "name": "soil-hygrometer",
-          "topic": "wemosd1r2/moisture/humidity",
-          "type": "number",
-          "acronym": "rH"
-        }
-      ]
-    },
-    {
-      "class": "MqttSensor",
-      "id": "esp01",
-      "name": "ESP01 monitoring",
-      "attributes": [
-        {
-          "name": "uptime",
-          "topic": "esp01/system/uptime",
-          "type": "number",
-          "unit": "m",
-          "acronym": "Uptime"
-        },
-        {
-          "name": "freeram",
-          "topic": "esp01/system/freeram",
-          "type": "number",
-          "unit": "B",
-          "acronym": "FreeRAM"
-        },
-        {
-          "name": "wifi-rssi",
-          "topic": "esp01/system/wifi-rssi",
-          "type": "number",
-          "unit": "dB",
-          "acronym": "WiFi-RSSI"
-        }
-      ]
-    },
-    {
-      "class": "MqttSensor",
-      "id": "mosquitto",
       "name": "Mosquitto MQTT broker",
+      "id": "mosquitto",
+      "class": "MqttSensor",
       "attributes": [
         {
           "name": "connected-clients",
@@ -118,9 +77,43 @@ Also supports lookup table to translate received message to another value.
       ]
     },
     {
+      "name": "Soil Hygrometer analog reading",
+      "id": "wemosd1r2-2",
       "class": "MqttSensor",
-      "id": "sensor-with-lookup",
+      "attributes": [
+        {
+          "name": "soil-hygrometer",
+          "topic": "wemosd1r2/moisture/humidity",
+          "type": "number",
+          "acronym": "rH"
+        }
+      ]
+    },
+    {
+      "name": "ESP8266 12E monitoring",
+      "id": "esp8266-12",
+      "class": "MqttSensor",
+      "attributes": [
+        {
+          "name": "uptime",
+          "topic": "esp8266/system/uptime",
+          "type": "number",
+          "unit": "m",
+          "acronym": "Uptime"
+        },
+        {
+          "name": "wifi-rssi",
+          "topic": "esp8266/system/wifi-rssi",
+          "type": "number",
+          "unit": "dB",
+          "acronym": "WiFi-RSSI"
+        }
+      ]
+    },
+    {
       "name": "Sensor with lookup",
+      "id": "sensor-with-lookup",
+      "class": "MqttSensor",
       "attributes": [
         {
           "name": "state",
@@ -137,16 +130,14 @@ Also supports lookup table to translate received message to another value.
       ]
     }
 
-
-
 ### Switch Device
 
 `MqttSwitch` is based on the PowerSwitch device class.
 
     {
-      "class": "MqttSwitch",
-      "id": "switch",
       "name": "MQTT Switch",
+      "id": "switch",
+      "class": "MqttSwitch",
       "topic": "wemosd1r2/gpio/2",
       "onMessage": "1",
       "offMessage": "0"
@@ -178,15 +169,13 @@ The following predicates and actions are supported:
 `MqttPresenceSensor` is a digital input device based on the `PresenceSensor` device class.
 
     {
-      "id": "mqtt-pir-sensor",
       "name": "MQTT PIR Sensor",
+      "id": "mqtt-pir-sensor",
       "class": "MqttPresenceSensor",
       "topic": "wemosd1r2/pir/presence",
       "onMessage": "1",
       "offMessage": "0"
     }
-
-Positively reacts to these states: "on", "true", "1", "1.00". Another payload invoke false/absent state.
 
 It has the following configuration properties:
 
@@ -211,15 +200,13 @@ The following predicates are supported:
 `MqttContactSensor` is a digital input device based on the `ContactSensor` device class.
 
     {
-      "class": "MqttContactSensor",
-      "id": "mqtt-contact",
       "name": "MQTT Contact",
+      "id": "mqtt-contact",
+      "class": "MqttContactSensor",
       "topic": "wemosd1r2/contact/state",
       "onMessage": "1",
       "offMessage": "0"
     }
-
-Positively reacts to these states: "on", "true", "1", "1.00", "closed". Another payload invoke false/absent state.
 
 It has the following configuration properties:
 
@@ -240,14 +227,44 @@ The following predicates are supported:
 
 * {device} is opened|closed
 
+### Dimmer Device
+
+`MqttDimmer` is based on the Dimmer device class.
+
+    {
+      "name": "MQTT Dimmer",
+      "id": "mqtt-dimmer",
+      "class": "MqttDimmer",
+      "topic": "wemosd1r2/pcapwm/5/brightness",
+      "resolution": 4096
+    },
+    {
+      "name": "MQTT Dimmer",
+      "id": "mqtt-dimmer",
+      "class": "MqttDimmer",
+      "topic": "wemosd1r2/gpio/15/brightness",
+      "resolution": 4096
+    }
+
+It has the following configuration properties:
+
+| Property   | Default  | Type    | Description                                 |
+|:-----------|:---------|:--------|:--------------------------------------------|
+| topic      | -        | String  | Topic for control dimmer brightness         |
+| resolution | 100      | Number  | Resolution of this dimmer                           |
+
+The Dimmer Action Provider:
+
+* dim [the] device to value%
+
 ### Buttons Device
 
 `MqttButtons` is based on the ButtonsDevice device class.
 
     {
-      "class": "MqttButtons",
-      "id": "buttons-demo",
       "name": "Buttons",
+      "id": "buttons-demo",
+      "class": "MqttButtons",
       "buttons": [
         {
           "id": "button1",
@@ -265,6 +282,9 @@ It has the following configuration properties for each button:
 | topic      | -        | String  | Topic for device state           |
 | message    | -        | String  | Publish message when pressed              |
 
+The Button Action Provider
+
+* press [the] device
 
 ##Rules
 
@@ -299,12 +319,12 @@ sudo /etc/init.d/mosquitto start
 
 ## To Do
 
-- [ ] Reflecting external condition for buttons
+- [ ] Reflecting external condition for buttons and dimmer
 - [ ] QoS
 - [ ] Processing json string in payload
-- [x] Make payload configurable for all device
+- [ ] Make payload configurable for all device
 - [x] Buttons Device
-- [ ] Configurable PWM range for Dimmer
+- [x] Configurable PWM range for Dimmer
 - [ ] Configurable CIE1931 correction for Dimmer
 - [ ] Support for more then one Broker
 - [ ] Sending all variables from Pimatic to Broker/s

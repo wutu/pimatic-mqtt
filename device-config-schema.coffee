@@ -31,18 +31,6 @@ module.exports = {
         description: "Device resolution"
         type: "integer"
         default: 100
-      stateTopic:
-        description: "Topic that communicates state, if exists"
-        type: "string"
-        default: ""
-      onMessage:
-        description: "Message to switch on"
-        type: "string"
-        default: "1"
-      offMessage:
-        description: "Message to switch off"
-        type: "string"
-        default: "0"
   }
   MqttSensor: {
     title: "MqttSensor config options"
