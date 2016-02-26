@@ -58,27 +58,6 @@ Also supports lookup table to translate received message to another value.
 
     {
       "class": "MqttSensor",
-      "id": "deep-space-nine-temp",
-      "name": "Deep Space Nine Temp :)",
-      "attributes": [
-        {
-          "name": "temp-kelvin",
-          "topic": "pimatic/deep-space-nine-temp/kelvin",
-          "type": "number",
-          "unit": "K",
-          "acronym": "T"
-        },
-        {
-          "name": "temp-celsius",
-          "topic": "pimatic/deep-space-nine-temp/celsius",
-          "type": "number",
-          "unit": "°C",
-          "acronym": "t"
-        }
-      ]
-    },
-    {
-      "class": "MqttSensor",
       "id": "wemosd1r2-2",
       "name": "Soil Hygrometer analog reading",
       "attributes": [
