@@ -13,7 +13,7 @@
     "README.md",
     "LICENSE"
   ],
-  "version": "0.8.1",
+  "version": "0.8.2",
   "homepage": "http://github.com/wutu/pimatic-mqtt",
   "repository": {
     "type": "git",
@@ -24,8 +24,7 @@
     "pimatic": "0.8.*"
   },
     "dependencies": {
-    "mqtt": ">=1.1.x",
-    "pimatic-plugin-commons": "^0.8.5"
+    "mqtt": ">=1.1.x"
   },
   "engines": {
     "node": ">0.8.x",

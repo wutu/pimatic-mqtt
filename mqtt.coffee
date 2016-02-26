@@ -21,33 +21,28 @@ module.exports = (env) ->
   class MqttPlugin extends env.plugins.Plugin
 
     init: (app, @framework, @config) =>
-      host = '127.0.0.1'
-      port = 1883
-      username = false
-      password = false
+  
       @connected = false
 
-      for broker, i in @config.brokers
-        if broker.id is '0'
-          host = broker.host or '127.0.0.1'
-          console.log host
-          port = broker.port or 1883
-          username = broker.username or false
-          password = broker.password or false
+      options = (
+        host: @config.host
+        port: @config.port
+        username: @config.username or false
+        password: if @config.password then new Buffer(@config.password) else false
+        keepalive: 20
+        clientId: 'pimatic_' + Math.random().toString(16).substr(2, 8)
+        reconnectPeriod: 5000
+        connectTimeout: 30000
+        will: 
+          topic: 'pimatic/status'
+          payload: new Buffer('dead')
+      )
 
       Connection = new Promise( (resolve, reject) =>
-        @mqttclient = new mqtt.connect('mqtt://' + host + ":" + port,
-          # keepalive: 120
-          clientId: 'pimatic_' + Math.random().toString(16).substr(2, 8)
-          reconnectPeriod: 5000
-          connectTimeout: 50000
-          if username
-            username: username
-          if password
-            password: new Buffer(password)
-        )
+        @mqttclient = new mqtt.connect(options)
         @mqttclient.on("connect", () =>
           @connected = true
+          env.logger.info "Successful connected to MQTT Broker"
           resolve()
         )
         @mqttclient.on('error', reject)
@@ -58,23 +53,21 @@ module.exports = (env) ->
         return
       )
 
-      @mqttclient.on 'connect', (packet) ->
-        if packet.returnCode is 0
-          env.logger.info "Successful connected to MQTT Broker"
-          @connected = true
-        else
-          @connected = false
-          if @config.debug
-            env.logger.debug "Connection error #{packet.returnCode}"
+      @mqttclient.on 'reconnect', () =>
+        env.logger.info "Reconnecting to MQTT Broker"
 
-      @mqttclient.on('offline', () =>
+      @mqttclient.on 'offline', () ->
         @connected = false
         env.logger.info "MQTT Broker is offline"
-      )
 
-      @mqttclient.on 'error', (error) =>
+      @mqttclient.on 'error', (error) ->
+        @connected = false
         env.logger.error "connection error: #{error}"
         env.logger.debug error.stack
+
+      @mqttclient.on 'close', () ->
+        @connected = false
+        env.logger.info "connected with the MQTT Broker was closed"  
 
       # register devices
       deviceConfigDef = require("./device-config-schema")

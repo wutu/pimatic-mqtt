@@ -11,7 +11,6 @@ module.exports = (env) ->
       @attributes = {}
       @mqttvars = []
 
-
       if @plugin.connected
         @onConnect()
 
