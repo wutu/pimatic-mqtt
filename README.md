@@ -29,24 +29,16 @@ Full config
 
     {
       "plugin": "mqtt",
-        "brokers": [
-        {
-          "id": "0",
-          "name": "Broker"
-          "host": "127.0.0.1",
-          "port": 1883,
-          "username": "test",
-          "password": "test"
-        }
-      ]
+      "host": "127.0.0.1",
+      "port": 1883,
+      "username": "test",
+      "password": "test"
     }
 
 The configuration for a broker is an object comprising the following properties.
 
 | Property  | Default     | Type    | Description                                                                           |
 |:----------|:------------|:--------|:--------------------------------------------------------------------------------------|
-| id        | "0"         | String  | Unique identifier used as a reference by a device configuration. Must be "0" for now. |
-| name      | -           | String  | Currently not used                                                                    |
 | host      | "127.0.0.1" | String  | Broker hostname or IP                                                                 |
 | port      | 1883        | integer | Broker port                                                                           |
 | username  | -           | String  | The login name                                                                        |
@@ -99,26 +91,6 @@ Also supports lookup table to translate received message to another value.
     },
     {
       "class": "MqttSensor",
-      "id": "esp01-power-meter",
-      "name": "Energiemonitor",
-      "attributes": [
-        {
-          "name": "pulses",
-          "topic": "pimatic/pulsecounter/count",
-          "type": "number",
-          "acronym": "Pulses"
-        },
-        {
-          "name": "total",
-          "topic": "pimatic/pulsecounter/total",
-          "type": "number",
-          "unit": "Wh",
-          "acronym": "Total"
-        }
-      ]
-    },
-    {
-      "class": "MqttSensor",
       "id": "esp01",
       "name": "ESP01 monitoring",
       "attributes": [
@@ -162,32 +134,6 @@ Also supports lookup table to translate received message to another value.
           "type": "number",
           "unit": "B",
           "acronym": "RAM usage"
-        },
-        {
-          "name": "mosquitto-msg-sent",
-          "topic": "$SYS/broker/publish/messages/sent",
-          "type": "number",
-          "acronym": "Msg-sent"
-        },
-        {
-          "name": "mosquitto-msg-received",
-          "topic": "$SYS/broker/publish/messages/received",
-          "type": "number",
-          "acronym": "Msg-received"
-        },
-        {
-          "name": "mosquitto-bytes-sent",
-          "topic": "$SYS/broker/bytes/sent",
-          "type": "number",
-          "unit": "B",
-          "acronym": "Bytes-sent"
-        },
-        {
-          "name": "mosquitto-bytes-received",
-          "topic": "$SYS/broker/bytes/received",
-          "type": "number",
-          "unit": "B",
-          "acronym": "Bytes-received"
         }
       ]
     },
