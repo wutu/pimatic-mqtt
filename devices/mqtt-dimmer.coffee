@@ -10,11 +10,11 @@ module.exports = (env) ->
       @_state = lastState?.state?.value or off
       @_dimlevel = lastState?.dimlevel?.value or 0
 
+      if @plugin.connected
+        @onConnect()
+
       @plugin.mqttclient.on('connect', =>
-        if config.stateTopic == ""
-          @plugin.mqttclient.subscribe(config.topic)
-        else
-          @plugin.mqttclient.subscribe(config.stateTopic)
+        @onConnect()
       )
 
       @plugin.mqttclient.on('message', (topic, message) =>
@@ -30,7 +30,13 @@ module.exports = (env) ->
               @emit @name, off
         )
       super()
-      
+
+    onConnect: () ->
+      if @config.stateTopic == ""
+        @plugin.mqttclient.subscribe(@config.topic)
+      else
+        @plugin.mqttclient.subscribe(@config.stateTopic)
+
     turnOn: ->
       @plugin.mqttclient.publish(@config.topic, @config.onMessage)
       Promise.resolve()

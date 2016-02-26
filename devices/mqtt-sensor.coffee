@@ -12,12 +12,11 @@ module.exports = (env) ->
       @mqttvars = []
 
 
+      if @plugin.connected
+        @onConnect()
+
       @plugin.mqttclient.on('connect', =>
-        # Subscribe to the topics
-        for attr, i in @config.attributes
-          do (attr) =>
-            @plugin.mqttclient.subscribe(attr.topic)
-            env.logger.debug("subscribe: " + attr.topic)
+        @onConnect()
       )
 
        
@@ -36,7 +35,10 @@ module.exports = (env) ->
                 else
                   @emit attr.name, Number(message)
               else
-                @emit attr.name, message.toString()
+                if attr.messageMap && attr.messageMap[message]
+                  @emit attr.name, attr.messageMap[message]
+                else
+                  @emit attr.name, message.toString()
       )
 
       for attr, i in @config.attributes
@@ -64,3 +66,10 @@ module.exports = (env) ->
           @_createGetter(name, getter)
 
       super()
+
+    onConnect: () ->
+      # Subscribe to the topics
+      for attr, i in @config.attributes
+        do (attr) =>
+          @plugin.mqttclient.subscribe(attr.topic)
+          env.logger.debug("subscribe: " + attr.topic)

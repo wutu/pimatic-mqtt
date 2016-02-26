@@ -61,6 +61,7 @@ Devices must be added manually to the device section of your pimatic config.
 
 `MqttSensor` is based on the Sensor device class. Handles numeric and text data from the payload.
 Code comes from the module pimatic-mqtt-simple. The author is Andre Miller (https://github.com/andremiller).
+Also supports lookup table to translate received message to another value.
 
     {
       "class": "MqttSensor",
@@ -188,6 +189,28 @@ Code comes from the module pimatic-mqtt-simple. The author is Andre Miller (http
           "unit": "B",
           "acronym": "Bytes-received"
         }
+      ]
+    },
+    {
+      "class": "MqttSensor",
+      "id": "sensor-with-lookup",
+      "name": "Sensor with lookup",
+      "attributes": [
+        {
+          "name": "state",
+          "topic": "some/topic",
+          "type": "string",
+          "unit": "",
+          "acronym": "",
+          "messageMap": {
+            "0": "Not ready",
+            "1": "Ready",
+            "2": "Completed"
+          }
+        }
+      ]
+    }
+
 
 
 ### Switch Device
@@ -283,6 +306,48 @@ The following predicates are supported:
 
 * {device} is opened|closed
 
+### Buttons Device
+
+`MqttSwitch` is based on the ButtonsDevice device class.
+
+    {
+      "class": "MqttButtons",
+      "id": "buttons-demo",
+      "name": "Buttons",
+      "buttons": [
+        {
+          "id": "button1",
+          "text": "Press me",
+          "topic": "some/topic",
+          "message": "1"
+        }
+      ]
+    }
+
+It has the following configuration properties for each button:
+
+| Property   | Default  | Type    | Description                                 |
+|:-----------|:---------|:--------|:--------------------------------------------|
+| topic      | -        | String  | Topic for device state           |
+| message    | -        | String  | Publish message when pressed              |
+
+
+##Rules
+
+You can publish mqtt messages in rules with the action:
+
+`publish mqtt message "<string with variables>" on topic "<string with variables>"`
+
+    "rules": [
+      {
+        "id": "my-rule",
+        "rule": "if every 1 minutes then publish mqtt message \"some message\" on topic \"my/topic\"",
+        "active": true,
+        "logging": false,
+        "name": "Publish mqtt"
+      }
+    ]
+
 
 ##Install Mosquitto broker
 
@@ -300,15 +365,15 @@ sudo /etc/init.d/mosquitto start
 
 ## To Do
 
-* Processing json string in payload
-* Make payload configurable for all device
-* Buttons Device
-* Configurable PWM range for Dimmer
-* Configurable CIE1931 correction for Dimmer
-* Support for more then one Broker
-* Sending all variables from Pimatic to Broker/s
-* Control Pimatic over MQTT
-* Integration with ActionProvider
+- [ ] Processing json string in payload
+- [ ] Make payload configurable for all device
+- [x] Buttons Device
+- [ ] Configurable PWM range for Dimmer
+- [ ] Configurable CIE1931 correction for Dimmer
+- [ ] Support for more then one Broker
+- [ ] Sending all variables from Pimatic to Broker/s
+- [ ] Control Pimatic over MQTT
+- [x] Integration with ActionProvider
 
 ## Credits
 

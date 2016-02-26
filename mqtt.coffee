@@ -11,6 +11,7 @@ module.exports = (env) ->
     'mqtt-sensor'
     'mqtt-presence-sensor'
     'mqtt-contact-sensor'
+    'mqtt-buttons'
   ]
     # convert kebap-case to camel-case notation with first character capitalized
     className = device.replace /(^[a-z])|(\-[a-z])/g, ($1) -> $1.toUpperCase().replace('-','')
@@ -24,6 +25,7 @@ module.exports = (env) ->
       port = 1883
       username = false
       password = false
+      @connected = false
 
       for broker, i in @config.brokers
         if broker.id is '0'
@@ -44,7 +46,10 @@ module.exports = (env) ->
           if password
             password: new Buffer(password)
         )
-        @mqttclient.on("connect", resolve)
+        @mqttclient.on("connect", () =>
+          @connected = true
+          resolve()
+        )
         @mqttclient.on('error', reject)
         return
       ).timeout(50000).catch( (error) ->
@@ -56,11 +61,14 @@ module.exports = (env) ->
       @mqttclient.on 'connect', (packet) ->
         if packet.returnCode is 0
           env.logger.info "Successful connected to MQTT Broker"
+          @connected = true
         else
+          @connected = false
           if @config.debug
             env.logger.debug "Connection error #{packet.returnCode}"
 
       @mqttclient.on('offline', () =>
+        @connected = false
         env.logger.info "MQTT Broker is offline"
       )
 
@@ -78,10 +86,59 @@ module.exports = (env) ->
           createCallback: @callbackHandler(className, classType)
         })
 
+      @framework.ruleManager.addActionProvider(new MqttActionProvider(@framework, @mqttclient))
+
     callbackHandler: (className, classType) ->
       # this closure is required to keep the className and classType context as part of the iteration
       return (config, lastState) =>
         return new classType(config, @, lastState)
+
+
+  # action provider for publishing mqtt messages
+  class MqttActionProvider extends env.actions.ActionProvider
+
+    constructor: (@framework, @mqttclient) ->
+
+    parseAction: (input, context) ->
+      stringMessage = null
+      stringTopic = null
+      match = null
+      fullMatch = no
+
+      setMessageString = (m, tokens) => stringMessage = tokens
+      setTopicString = (m, tokens) => stringTopic = tokens
+
+      m = env.matcher(input, context)
+        .match("publish mqtt message ")
+        .matchStringWithVars(setMessageString)
+        .match(" on topic ")
+        .matchStringWithVars(setTopicString)
+
+      if m.hadMatch()
+        match = m.getFullMatch()
+        return {
+          token: match
+          nextInput: input.substring(match.length)
+          actionHandler: new MqttActionHandler(@framework, @mqttclient, stringTopic, stringMessage)
+        }
+      else
+        return null
+
+  class MqttActionHandler extends env.actions.ActionHandler
+
+    constructor: (@framework, @mqttclient, @stringTopic, @stringMessage) ->
+
+    executeAction: (simulate) ->
+      @framework.variableManager.evaluateStringExpression(@stringTopic).then( (strTopic) =>
+        @framework.variableManager.evaluateStringExpression(@stringMessage).then( (strMessage) =>
+          if simulate
+            return Promise.resolve("publish mqtt message " + strMessage + " on topic " + strTopic)
+          else
+            #env.logger.info "publish mqtt message " + strMessage + " on topic " + strTopic
+            @mqttclient.publish(strTopic, strMessage)
+            return Promise.resolve("publish mqtt message " + strMessage + " on topic " + strTopic)
+        )
+      )
 
   # ###Finally
   # Create a instance of my plugin
