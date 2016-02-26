@@ -13,7 +13,7 @@ module.exports = (env) ->
         @onConnect()
 
       @plugin.mqttclient.on('connect', =>
-        onConnect()
+        @onConnect()
       )
 
       @plugin.mqttclient.on('message', (topic, message) =>
