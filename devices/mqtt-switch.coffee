@@ -21,14 +21,16 @@ module.exports = (env) ->
       @plugin.mqttclient.on('message', (topic, message) =>
         if (@config.stateTopic == "" && @config.topic == topic) || (@config.stateTopic != "" && @config.stateTopic == topic)
           switch message.toString()
-            when "on", "true", "1", "t", "o", "1.00"
+            when @config.onMessage
               @_setState(on)
               @_state = on
               @emit "state", on
-            else
+            when @config.offMessage
               @_setState(off)
               @_state = off
               @emit "state", off
+            else
+              env.logger.debug "#{@name} with id:#{@id}: Message is not harmony with onMessage or offMessage in config.json or with default values"
       )
       super()
 

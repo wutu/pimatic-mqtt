@@ -5,18 +5,18 @@ module.exports = {
     type: "object"
     properties:
       topic:
-        description: "Topic to control switch"
+        description: "Topic for control switch"
         type: "string"
       onMessage:
         description: "Message to switch on"
         type: "string"
-        default: "on"
+        default: "1"
       offMessage:
         description: "Message to switch off"
         type: "string"
-        default: "off"
+        default: "0"
       stateTopic:
-        description: "Topic that communicates state"
+        description: "Topic that communicates state, if exists"
         type: "string"
         default: ""
   }
@@ -25,24 +25,24 @@ module.exports = {
     type: "object"
     properties:
       topic:
-        description: "Topic to control dimmer state"
+        description: "Topic for control dimmer brightness"
         type: "string"
+      resolution:
+        description: "Device resolution"
+        type: "integer"
+        default: 100
+      stateTopic:
+        description: "Topic that communicates state, if exists"
+        type: "string"
+        default: ""
       onMessage:
         description: "Message to switch on"
         type: "string"
-        default: "on"
+        default: "1"
       offMessage:
         description: "Message to switch off"
         type: "string"
-        default: "off"
-      brightness:
-        description: "Message to change brightness"
-        type: "number"
-        default: 0
-      stateTopic:
-        description: "Topic that communicates state"
-        type: "string"
-        default: ""
+        default: "0"
   }
   MqttSensor: {
     title: "MqttSensor config options"
@@ -60,10 +60,14 @@ module.exports = {
       topic:
         description: "Topic of device state"
         type: "string"
-      inverted:
-        description: "LOW = present?"
-        type: "boolean"
-        default: false
+      onMessage:
+        description: "Message that invokes positive status"
+        type: "string"
+        default: "1"
+      offMessage:
+        description: "Message that invokes negative status"
+        type: "string"
+        default: "0"
   }
   MqttContactSensor: {
     title: "MqttContactSensor config options"
@@ -73,10 +77,14 @@ module.exports = {
       topic:
         description: "Topic of device state"
         type: "string"
-      inverted:
-        description: "LOW = closed?"
-        type: "boolean"
-        default: false
+      onMessage:
+        description: "Message that invokes positive status"
+        type: "string"
+        default: "1"
+      offMessage:
+        description: "Message that invokes negative status"
+        type: "string"
+        default: "0"
   }
   MqttButtons: {
     title: "MqttButtons config options"

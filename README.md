@@ -148,8 +148,8 @@ Also supports lookup table to translate received message to another value.
       "id": "switch",
       "name": "MQTT Switch",
       "topic": "wemosd1r2/gpio/2",
-      "onMessage": "1.00",
-      "offMessage": "0.00"
+      "onMessage": "1",
+      "offMessage": "0"
     }
 
 It has the following configuration properties:
@@ -157,9 +157,9 @@ It has the following configuration properties:
 | Property   | Default  | Type    | Description                                 |
 |:-----------|:---------|:--------|:--------------------------------------------|
 | topic      | -        | String  | Topic for device state           |
-| onMessage  | -        | String  | Message to switch on                  |
-| offMessage | -        | String  | Message to switch off                  |
-| stateTopic | -        | String  | Topic that communicates state           |
+| onMessage  | "1"      | String  | Message to switch on                  |
+| offMessage | "0"      | String  | Message to switch off                  |
+| stateTopic | -        | String  | Topic that communicates state, if exists          |
 
 Device exhibits the following attributes:
 
@@ -178,19 +178,23 @@ The following predicates and actions are supported:
 `MqttPresenceSensor` is a digital input device based on the `PresenceSensor` device class.
 
     {
-      "class": "MqttPresenceSensor",
       "id": "mqtt-pir-sensor",
       "name": "MQTT PIR Sensor",
-      "topic": "wemosd1r2/pir/presence"
+      "class": "MqttPresenceSensor",
+      "topic": "wemosd1r2/pir/presence",
+      "onMessage": "1",
+      "offMessage": "0"
     }
 
 Positively reacts to these states: "on", "true", "1", "1.00". Another payload invoke false/absent state.
 
 It has the following configuration properties:
 
-| Property  | Default  | Type    | Description                                 |
-|:----------|:---------|:--------|:--------------------------------------------|
-| topic     | -        | String  | Topic for device state           |
+| Property   | Default  | Type    | Description                                 |
+|:-----------|:---------|:--------|:--------------------------------------------|
+| topic      | -        | String  | Topic for device state           |
+| onMessage  | "1"      | String  | Message that invokes positive status                  |
+| offMessage | "0"      | String  | Message that invokes negative status                  |
 
 The presence sensor exhibits the following attributes:
 
@@ -210,16 +214,20 @@ The following predicates are supported:
       "class": "MqttContactSensor",
       "id": "mqtt-contact",
       "name": "MQTT Contact",
-      "topic": "wemosd1r2/contact/state"
+      "topic": "wemosd1r2/contact/state",
+      "onMessage": "1",
+      "offMessage": "0"
     }
 
 Positively reacts to these states: "on", "true", "1", "1.00", "closed". Another payload invoke false/absent state.
 
 It has the following configuration properties:
 
-| Property  | Default  | Type    | Description                                 |
-|:----------|:---------|:--------|:--------------------------------------------|
-| topic     | -        | String  | Topic for device state           |
+| Property   | Default  | Type    | Description                                 |
+|:-----------|:---------|:--------|:--------------------------------------------|
+| topic      | -        | String  | Topic for device state           |
+| onMessage  | "1"      | String  | Message that invokes positive status                  |
+| offMessage | "0"      | String  | Message that invokes negative status                  |
 
 The presence sensor exhibits the following attributes:
 
@@ -291,8 +299,10 @@ sudo /etc/init.d/mosquitto start
 
 ## To Do
 
+- [ ] Reflecting external condition for buttons
+- [ ] QoS
 - [ ] Processing json string in payload
-- [ ] Make payload configurable for all device
+- [x] Make payload configurable for all device
 - [x] Buttons Device
 - [ ] Configurable PWM range for Dimmer
 - [ ] Configurable CIE1931 correction for Dimmer
