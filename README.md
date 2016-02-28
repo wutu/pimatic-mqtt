@@ -243,7 +243,7 @@ The following predicates are supported:
       "id": "mqtt-dimmer",
       "class": "MqttDimmer",
       "topic": "wemosd1r2/gpio/15/brightness",
-      "resolution": 4096
+      "resolution": 256
     }
 
 It has the following configuration properties:
@@ -251,7 +251,7 @@ It has the following configuration properties:
 | Property   | Default  | Type    | Description                                 |
 |:-----------|:---------|:--------|:--------------------------------------------|
 | topic      | -        | String  | Topic for control dimmer brightness         |
-| resolution | 100      | Number  | Resolution of this dimmer                           |
+| resolution | 256      | Number  | Resolution of this dimmer                           |
 
 The Dimmer Action Provider:
 
@@ -319,9 +319,10 @@ sudo /etc/init.d/mosquitto start
 
 ## To Do
 
-- [ ] Reflecting external condition for buttons and dimmer
+- [x] Reflecting external condition for dimmer
+- [ ] Reflecting external condition for buttons
 - [ ] QoS
-- [ ] Processing json string in payload
+- [ ] Processing JSON-encoded object
 - [ ] Make payload configurable for all device
 - [x] Buttons Device
 - [x] Configurable PWM range for Dimmer
