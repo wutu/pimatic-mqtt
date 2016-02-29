@@ -249,9 +249,9 @@ The following predicates are supported:
 It has the following configuration properties:
 
 | Property   | Default  | Type    | Description                                 |
-|:-----------|:---------|:--------|:--------------------------------------------|
-| topic      | -        | String  | Topic for control dimmer brightness         |
-| resolution | 256      | Number  | Resolution of this dimmer                           |
+|:-----------|:---------|:--------|:--------------------------------------------------|
+| topic      | -        | String  | Topic for control dimmer brightness.             |
+| resolution | 256      | Number  | Resolution of this dimmer. For percent set 101. |
 
 The Dimmer Action Provider:
 
@@ -320,10 +320,10 @@ sudo /etc/init.d/mosquitto start
 ## To Do
 
 - [x] Reflecting external condition for dimmer
-- [ ] Reflecting external condition for buttons
+- [x] Reflecting external condition for buttons
 - [ ] QoS
 - [ ] Processing JSON-encoded object
-- [ ] Make payload configurable for all device
+- [x] Make payload configurable for all device
 - [x] Buttons Device
 - [x] Configurable PWM range for Dimmer
 - [ ] Configurable CIE1931 correction for Dimmer

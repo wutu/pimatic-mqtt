@@ -19,6 +19,8 @@ module.exports = (env) ->
       @plugin.mqttclient.on 'message', (topic, message) =>
         for b in @config.buttons
           if b.topic == topic
+            payload = message.toString()
+            if payload == b.message
             console.log topic
             @emit 'button', b.id
 
