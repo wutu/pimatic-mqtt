@@ -49,14 +49,17 @@ module.exports = (env) ->
 
     turnOn: ->
       @getDevLevel(100)
-      @plugin.mqttclient.publish(@topic, @devLevel)
+      @plugin.mqttclient.publish(@config.topic, @devLevel)
+      return Promise.resolve()
       
     turnOff: ->
-      @plugin.mqttclient.publish(@topic, '0')
+      @plugin.mqttclient.publish(@config.topic, 0)
+      return Promise.resolve()
 
     changeDimlevelTo: (dimlevel) ->
       @getDevLevel(dimlevel)
       @plugin.mqttclient.publish(@config.topic, @devLevel)
       @_setDimlevel(dimlevel)
+      return Promise.resolve()
 
     getDimlevel: -> Promise.resolve(@_dimlevel)
