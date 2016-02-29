@@ -2,6 +2,7 @@
   "name": "pimatic-mqtt",
   "description": "MQTT support for Pimatic",
   "author_name": "Marek Kail",
+  "author": "Marek Kail",
   "author_url": "https://github.com/wutu",
   "npmUser": "wutu",
   "main": "mqtt",
@@ -13,7 +14,7 @@
     "README.md",
     "LICENSE"
   ],
-  "version": "0.8.2",
+  "version": "0.8.3",
   "homepage": "http://github.com/wutu/pimatic-mqtt",
   "repository": {
     "type": "git",
@@ -23,7 +24,7 @@
   "peerDependencies": {
     "pimatic": "0.8.*"
   },
-    "dependencies": {
+  "dependencies": {
     "mqtt": ">=1.1.x"
   },
   "engines": {
@@ -49,9 +50,10 @@
     "email": "reg@kail.cz"
   },
   "maintainers": [
-    {
-      "name": "wutu",
-      "url": "https://github.com/wutu"
-    }
-  ]
+    "wutu (https://github.com/wutu)"
+  ],
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
 }

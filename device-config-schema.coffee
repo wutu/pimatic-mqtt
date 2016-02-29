@@ -30,7 +30,7 @@ module.exports = {
       resolution:
         description: "Device resolution"
         type: "integer"
-        default: 100
+        default: 256
   }
   MqttSensor: {
     title: "MqttSensor config options"
