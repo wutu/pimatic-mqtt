@@ -20,7 +20,7 @@ module.exports = (env) ->
         for b in @config.buttons
           if b.topic == topic
             payload = message.toString()
-            if payload == b.message
+          if payload == b.message
             @emit 'button', b.id
 
 
