@@ -41,7 +41,7 @@ The configuration for a broker is an object comprising the following properties.
 | Property  | Default     | Type    | Description                                                                           |
 |:----------|:------------|:--------|:--------------------------------------------------------------------------------------|
 | host      | "127.0.0.1" | String  | Broker hostname or IP                                                                 |
-| port      | 1883        | integer | Broker port                                                                           |
+| port      | 1883        | Integer | Broker port                                                                           |
 | username  | -           | String  | The login name                                                                        |
 | password  | -           | String  | The Password                                                                          |
 
@@ -251,7 +251,7 @@ It has the following configuration properties:
 | Property   | Default  | Type    | Description                                 |
 |:-----------|:---------|:--------|:--------------------------------------------------|
 | topic      | -        | String  | Topic for control dimmer brightness.             |
-| resolution | 256      | Number  | Resolution of this dimmer. For percent set 101. |
+| resolution | 256      | Integer | Resolution of this dimmer. For percent set 101. |
 
 The Dimmer Action Provider:
 

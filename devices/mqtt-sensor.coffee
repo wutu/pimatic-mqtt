@@ -20,22 +20,26 @@ module.exports = (env) ->
 
        
       @plugin.mqttclient.on('message', (topic, message) =>
-        # message is Buffer
-        # Get the right name for this topic
         for attr, i in @config.attributes
           do (attr) =>
             if attr.topic == topic
-              # Update value in local array
               @mqttvars[topic] = message.toString()
-              # Emit the new value
-              if attr.type == 'number'
-                if attr.division
-                  @emit attr.name, Number(message) / attr.division
-                else
-                  @emit attr.name, Number(message)
+              try data = JSON.parse(message)
+              if typeof data == 'object' then for key, value of data
+                if key == attr.name
+                  if attr.type == 'number'
+                    if attr.division
+                      @emit attr.name, Number("#{value}") / attr.division
+                    else
+                      @emit attr.name, Number("#{value}")
+                  else
+                    @emit "#{key}: #{value}"
               else
-                if attr.messageMap && attr.messageMap[message]
-                  @emit attr.name, attr.messageMap[message]
+                if attr.type == 'number'
+                  if attr.division
+                    @emit attr.name, Number(message) / attr.division
+                  else
+                    @emit attr.name, Number(message)
                 else
                   @emit attr.name, message.toString()
       )
