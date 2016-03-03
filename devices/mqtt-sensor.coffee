@@ -23,9 +23,11 @@ module.exports = (env) ->
         for attr, i in @config.attributes
           do (attr) =>
             if attr.topic == topic
-              @mqttvars[topic] = message.toString()
-              try data = JSON.parse(message)
+              payload = message.toString()
+              @mqttvars[topic] = payload
+              try data = JSON.parse(payload)
               if typeof data == 'object' then for key, value of data
+                console.log "json: #{data}"
                 if key == attr.name
                   if attr.type == 'number'
                     if attr.division
@@ -33,15 +35,16 @@ module.exports = (env) ->
                     else
                       @emit attr.name, Number("#{value}")
                   else
-                    @emit "#{key}: #{value}"
+                    @emit attr.name, "#{value}"
               else
+                console.log "single value"
                 if attr.type == 'number'
                   if attr.division
                     @emit attr.name, Number(message) / attr.division
                   else
                     @emit attr.name, Number(message)
                 else
-                  @emit attr.name, message.toString()
+                  @emit attr.name, payload
       )
 
       for attr, i in @config.attributes
