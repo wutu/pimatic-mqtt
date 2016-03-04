@@ -26,7 +26,7 @@ module.exports = (env) ->
               payload = message.toString()
               @mqttvars[topic] = payload
               try data = JSON.parse(payload)
-              if typeof data == 'object' then for key, value of data
+              if typeof data is 'object' then for key, value of data
                 console.log "json: #{data}"
                 if key == attr.name
                   if attr.type == 'number'
@@ -43,8 +43,12 @@ module.exports = (env) ->
                     @emit attr.name, Number(message) / attr.division
                   else
                     @emit attr.name, Number(message)
+                    console.log "number"
                 else
-                  @emit attr.name, payload
+                  if attr.messageMap && attr.messageMap[message]
+                    @emit attr.name, attr.messageMap[message]
+                  else
+                    @emit attr.name, message.toString()
       )
 
       for attr, i in @config.attributes
