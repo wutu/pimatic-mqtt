@@ -1,7 +1,7 @@
 
 # pimatic-mqtt
 
-Pimatic Plugin for Mqtt
+Pimatic plugin for Mqtt
 
 ## Status of implementation
 
@@ -9,7 +9,8 @@ This version supports the following
 
 * General sensor (numeric and text data from payload)
 * Switch
-* PresenceSensor, ContactSensor
+* PresenceSensor
+* ContactSensor
 * Dimmer
 * Buttons
 
@@ -54,7 +55,6 @@ Devices must be added manually to the device section of your pimatic config.
 
 `MqttSensor` is based on the Sensor device class. Handles numeric and text data from the payload.
 Code comes from the module pimatic-mqtt-simple. The author is Andre Miller (https://github.com/andremiller).
-Also supports lookup table to translate received message to another value.
 
     {
       "name": "Mosquitto MQTT broker",
@@ -109,7 +109,10 @@ Also supports lookup table to translate received message to another value.
           "acronym": "WiFi-RSSI"
         }
       ]
-    },
+    }
+
+Supports lookup table to translate received message to another value.
+
     {
       "name": "Sensor with lookup",
       "id": "sensor-with-lookup",
@@ -126,6 +129,57 @@ Also supports lookup table to translate received message to another value.
             "1": "Ready",
             "2": "Completed"
           }
+        }
+      ]
+    }
+
+Accepts flat JSON MQTT message
+
+Sample mqtt message: {"rel_pressue": "30.5015", "wind_ave": "0.00", "rain": "0", "rainin": "0", "hum_in": "64", "temp_in_f": "66.4", "dailyrainin": "0", "wind_dir": "225", "temp_in_c": "19.1", "hum_out": "81", "dailyrain": "0", "wind_gust": "0.00", "idx": "2015-10-22 21:41:03", "temp_out_f": "49.6", "temp_out_c": "9.8"}
+
+    {
+      "class": "MqttSimpleSensor",
+      "id": "weatherstation",
+      "name": "Weather Station",
+      "mqtturl": "mqtt://localhost",
+      "attributes": [
+        {
+          "name": "temp_in_c",
+          "topic": "weatherstation",
+          "type": "number",
+          "unit": "c",
+          "acronym": "Inside Temperature"
+        },
+        {
+          "name": "temp_out_c",
+          "topic": "weatherstation",
+          "type": "number",
+          "unit": "c",
+          "acronym": "Outside Temperature"
+        }
+      ]
+    }
+
+Accepts JSON MQTT message with hierarchy
+
+Sample mqtt message: {"kodi_details": {"title": "", "fanart": "", "label": "The.Victorias.Secret.Fashion.Show.2015.720p.HDTV.x264.mkv", "type": "unknown", "streamdetails": {"video": [{"stereomode": "", "width": 1280, "codec": "h264", "aspect": 1.7777780294418335, "duration": 2537, "height": 720}], "audio": [{"channels": 6, "codec": "ac3", "language": ""}], "subtitle": [{"language": ""}]}}, "val": ""}
+
+    {
+      "name": "Kodi media info",
+      "id": "kodi-media-info",
+      "class": "MqttSensor",
+      "attributes": [
+        {
+          "name": "kodi_details.label",
+          "topic": "kodi/status/title",
+          "type": "string",
+          "acronym": "label"
+        },
+        {
+          "name": "kodi_details.streamdetails.video.0.codec",
+          "topic": "kodi/status/title",
+          "type": "string",
+          "acronym": "codec"
         }
       ]
     }
@@ -322,7 +376,7 @@ sudo /etc/init.d/mosquitto start
 - [x] Reflecting external condition for dimmer
 - [x] Reflecting external condition for buttons
 - [ ] QoS
-- [ ] Processing JSON-encoded object
+- [x] Processing JSON-encoded object
 - [x] Make payload configurable for all device
 - [x] Buttons Device
 - [x] Configurable PWM range for Dimmer
