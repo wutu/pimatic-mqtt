@@ -44,4 +44,4 @@ module.exports = (env) ->
       message = (if state then @config.onMessage else @config.offMessage)
       @plugin.mqttclient.publish(@config.topic, message)
       @_setState(state)
-      return
+      return Promise.resolve()
