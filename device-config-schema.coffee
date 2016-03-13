@@ -3,6 +3,7 @@ module.exports = {
   MqttSwitch: {
     title: "MqttSwitch config options"
     type: "object"
+    extensions: ["xLink", "xConfirm"]
     properties:
       topic:
         description: "Topic for control switch"
@@ -35,6 +36,7 @@ module.exports = {
   MqttSensor: {
     title: "MqttSensor config options"
     type: "object"
+    extensions: ["xLink", "xAttributeOptions"]
     properties:
       attributes:
         description: "Attributes of device"
@@ -77,6 +79,7 @@ module.exports = {
   MqttButtons: {
     title: "MqttButtons config options"
     type: "object"
+    extensions: ["xLink"]
     properties:
       buttons:
         description: "Attributes of device"

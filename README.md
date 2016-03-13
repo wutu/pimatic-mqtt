@@ -65,7 +65,8 @@ Code comes from the module pimatic-mqtt-simple. The author is Andre Miller (http
           "name": "connected-clients",
           "topic": "$SYS/broker/clients/connected",
           "type": "number",
-          "acronym": "Clients"
+          "acronym": "Clients",
+          "discrete": true
         },
         {
           "name": "ram-usage",
