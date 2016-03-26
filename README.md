@@ -1,7 +1,22 @@
 
 # pimatic-mqtt
 
-Pimatic plugin for Mqtt
+[![npm version](https://badge.fury.io/js/pimatic-mqtt.png)](https://badge.fury.io/js/pimatic-mqtt)
+
+MQTT pkugin for <a href="https://pimatic.org">Pimatic</a>
+
+## Screenshots
+[![Screenshot 1][screen1_thumb]](https://github.com/wutu/pimatic-mqtt/raw/master/assets/screens/screen1.png)
+[![Screenshot 2][screen2_thumb]](https://github.com/wutu/pimatic-mqtt/raw/master/assets/screens/screen2.png)
+[![Screenshot 3][screen3_thumb]](https://github.com/wutu/pimatic-mqtt/raw/master/assets/screens/screen3.png)
+[![Screenshot 4][screen4_thumb]](https://github.com/wutu/pimatic-mqtt/raw/master/assets/screens/screen4.png)
+[![Screenshot 4][screen4_thumb]](https://github.com/wutu/pimatic-mqtt/raw/master/assets/screens/screen5.png)
+
+[screen1_thumb]: https://github.com/wutu/pimatic-mqtt/raw/master/assets/screens/screen1_thumb.png?v=1
+[screen2_thumb]: https://github.com/wutu/pimatic-mqtt/raw/master/assets/screens/screen2_thumb.png?v=1
+[screen3_thumb]: https://github.com/wutu/pimatic-mqtt/raw/master/assets/screens/screen3_thumb.png?v=1
+[screen4_thumb]: https://github.com/wutu/pimatic-mqtt/raw/master/assets/screens/screen4_thumb.png?v=1
+[screen4_thumb]: https://github.com/wutu/pimatic-mqtt/raw/master/assets/screens/screen5_thumb.png?v=1
 
 ## Status of implementation
 
@@ -31,20 +46,30 @@ Full config
 
     {
       "plugin": "mqtt",
-      "host": "127.0.0.1",
+      "host": "broker.lan",
       "port": 1883,
+      "keepalive": 180,
+      "clientId": "Pimatic_B",
+      "reconnect": 5000,
+      "timeout": 30000,
       "username": "test",
-      "password": "test"
+      "password": "mqtt"
     }
 
 The configuration for a broker is an object comprising the following properties.
 
-| Property  | Default     | Type    | Description                                                                           |
-|:----------|:------------|:--------|:--------------------------------------------------------------------------------------|
-| host      | "127.0.0.1" | String  | Broker hostname or IP                                                                 |
-| port      | 1883        | Integer | Broker port                                                                           |
-| username  | -           | String  | The login name                                                                        |
-| password  | -           | String  | The Password                                                                          |
+| Property    | Default     | Type    | Description                                                                             |
+|:------------|:------------|:--------|:----------------------------------------------------------------------------------------|
+| host        | "127.0.0.1" | String  | Broker hostname or IP                                                                   |
+| port        | 1883        | Integer | Broker port                                                                             |
+| keepalive   | 180         | Integer | Keepalive in seconds                                                                    |
+| clientId    | pimatic*    | String  | *pimatic + random number generation                                                     |
+| protocolId  | "MQTT"      | String  | With broker that supports only MQTT 3.1 (not 3.1.1 compliant), you should pass "MQIsdp" |
+| protocolVer | 4           | Integer | With broker that supports only MQTT 3.1 (not 3.1.1 compliant), you should pass 3        |
+| reconnect   | 5000        | Integer | Reconnect period in milliseconds                                                        |
+| timeout     | 30000       | Integer | Connect timeout in milliseconds                                                         |
+| username    | -           | String  | The login name                                                                          |
+| password    | -           | String  | The Password                                                                            |
 
 
 ## Device Configuration
@@ -54,10 +79,43 @@ Devices must be added manually to the device section of your pimatic config.
 ### Generic sensor
 
 `MqttSensor` is based on the Sensor device class. Handles numeric and text data from the payload.
-Code comes from the module pimatic-mqtt-simple. The author is Andre Miller (https://github.com/andremiller).
 
     {
-      "name": "Mosquitto MQTT broker",
+      "name": "Soil Hygrometer analog reading",
+      "id": "wemosd1r2-2",
+      "class": "MqttSensor",
+      "attributes": [
+        {
+          "name": "soil-hygrometer",
+          "topic": "wemosd1r2/moisture/humidity",
+          "type": "number",
+          "acronym": "rH"
+        }
+      ]
+    },
+    {
+      "name": "ESP01 with battery",
+      "id": "esp01",
+      "class": "MqttSensor",
+      "attributes": [
+        {
+          "name": "temperature",
+          "topic": "myhome/firstfloor/office/esp01/dht11/temperature",
+          "type": "number",
+          "unit": "°C",
+          "acronym": "DHT-11-Temperature"
+        },
+        {
+          "name": "humidity",
+          "topic": "myhome/firstfloor/office/esp01/dht11/humidity",
+          "type": "number",
+          "unit": "%",
+          "acronym": "DHT-11-Humidity"
+        }
+      ]
+    },
+    {
+      "name": "Mosquitto",
       "id": "mosquitto",
       "class": "MqttSensor",
       "attributes": [
@@ -75,39 +133,15 @@ Code comes from the module pimatic-mqtt-simple. The author is Andre Miller (http
           "unit": "B",
           "acronym": "RAM usage"
         }
-      ]
-    },
-    {
-      "name": "Soil Hygrometer analog reading",
-      "id": "wemosd1r2-2",
-      "class": "MqttSensor",
-      "attributes": [
+      ],
+      "xAttributeOptions": [
         {
-          "name": "soil-hygrometer",
-          "topic": "wemosd1r2/moisture/humidity",
-          "type": "number",
-          "acronym": "rH"
-        }
-      ]
-    },
-    {
-      "name": "ESP8266 12E monitoring",
-      "id": "esp8266-12",
-      "class": "MqttSensor",
-      "attributes": [
-        {
-          "name": "uptime",
-          "topic": "esp8266/system/uptime",
-          "type": "number",
-          "unit": "m",
-          "acronym": "Uptime"
+          "name": "connected-clients",
+          "displaySparkline": false
         },
         {
-          "name": "wifi-rssi",
-          "topic": "esp8266/system/wifi-rssi",
-          "type": "number",
-          "unit": "dB",
-          "acronym": "WiFi-RSSI"
+          "name": "ram-usage",
+          "displaySparkline": false
         }
       ]
     }
@@ -134,12 +168,12 @@ Supports lookup table to translate received message to another value.
       ]
     }
 
-Accepts flat JSON MQTT message
+Accepts flat JSON message
 
 Sample mqtt message: {"rel_pressue": "30.5015", "wind_ave": "0.00", "rain": "0", "rainin": "0", "hum_in": "64", "temp_in_f": "66.4", "dailyrainin": "0", "wind_dir": "225", "temp_in_c": "19.1", "hum_out": "81", "dailyrain": "0", "wind_gust": "0.00", "idx": "2015-10-22 21:41:03", "temp_out_f": "49.6", "temp_out_c": "9.8"}
 
     {
-      "class": "MqttSimpleSensor",
+      "class": "MqttSensor",
       "id": "weatherstation",
       "name": "Weather Station",
       "mqtturl": "mqtt://localhost",
@@ -161,7 +195,7 @@ Sample mqtt message: {"rel_pressue": "30.5015", "wind_ave": "0.00", "rain": "0",
       ]
     }
 
-Accepts JSON MQTT message with hierarchy
+Accepts JSON message with hierarchy
 
 Sample mqtt message: {"kodi_details": {"title": "", "fanart": "", "label": "The.Victorias.Secret.Fashion.Show.2015.720p.HDTV.x264.mkv", "type": "unknown", "streamdetails": {"video": [{"stereomode": "", "width": 1280, "codec": "h264", "aspect": 1.7777780294418335, "duration": 2537, "height": 720}], "audio": [{"channels": 6, "codec": "ac3", "language": ""}], "subtitle": [{"language": ""}]}}, "val": ""}
 

@@ -10,6 +10,30 @@ module.exports = {
       description: "The port of the MQTT broker (Default: 1883)"
       type: "integer"
       default: 1883
+    keepalive:
+      description: "keepalive in seconds"
+      type: "integer"
+      default: 180
+    clientId:
+      description: "Client Id"
+      type: "string"
+      default: ""
+    protocolId:
+      description: "MQTT protocol ID"
+      type: "string"
+      default: "MQTT"
+    protocolVer:
+      description: "MQTT protocol version"
+      type: "integer"
+      default: 4
+    reconnect:
+      description: "reconnectPeriod in milliseconds"
+      type: "integer"
+      default: 5000
+    timeout:
+      description: "connectTimeout in milliseconds"
+      type: "integer"
+      default: 30000
     username:
       description: "The login name"
       type: "string"
