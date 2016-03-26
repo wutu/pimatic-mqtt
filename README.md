@@ -3,20 +3,20 @@
 
 [![npm version](https://badge.fury.io/js/pimatic-mqtt.png)](https://badge.fury.io/js/pimatic-mqtt)
 
-MQTT pkugin for <a href="https://pimatic.org">Pimatic</a>
+MQTT plugin for <a href="https://pimatic.org">Pimatic</a>
 
 ## Screenshots
 [![Screenshot 1][screen1_thumb]](https://github.com/wutu/pimatic-mqtt/raw/master/assets/screens/screen1.png)
 [![Screenshot 2][screen2_thumb]](https://github.com/wutu/pimatic-mqtt/raw/master/assets/screens/screen2.png)
 [![Screenshot 3][screen3_thumb]](https://github.com/wutu/pimatic-mqtt/raw/master/assets/screens/screen3.png)
 [![Screenshot 4][screen4_thumb]](https://github.com/wutu/pimatic-mqtt/raw/master/assets/screens/screen4.png)
-[![Screenshot 4][screen4_thumb]](https://github.com/wutu/pimatic-mqtt/raw/master/assets/screens/screen5.png)
+[![Screenshot 5][screen5_thumb]](https://github.com/wutu/pimatic-mqtt/raw/master/assets/screens/screen5.png)
 
 [screen1_thumb]: https://github.com/wutu/pimatic-mqtt/raw/master/assets/screens/screen1_thumb.png?v=1
 [screen2_thumb]: https://github.com/wutu/pimatic-mqtt/raw/master/assets/screens/screen2_thumb.png?v=1
 [screen3_thumb]: https://github.com/wutu/pimatic-mqtt/raw/master/assets/screens/screen3_thumb.png?v=1
 [screen4_thumb]: https://github.com/wutu/pimatic-mqtt/raw/master/assets/screens/screen4_thumb.png?v=1
-[screen4_thumb]: https://github.com/wutu/pimatic-mqtt/raw/master/assets/screens/screen5_thumb.png?v=1
+[screen5_thumb]: https://github.com/wutu/pimatic-mqtt/raw/master/assets/screens/screen5_thumb.png?v=1
 
 ## Status of implementation
 
