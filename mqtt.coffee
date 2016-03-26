@@ -27,19 +27,21 @@ module.exports = (env) ->
       options = (
         host: @config.host
         port: @config.port
-        username: @config.username or false
+        username: @config.username
         password: if @config.password then new Buffer(@config.password) else false
-        keepalive: 180
-        clientId: 'pimatic_' + Math.random().toString(16).substr(2, 8)
-        reconnectPeriod: 5000
-        connectTimeout: 30000
+        keepalive: @config.keepalive
+        clientId: @config.clientId or 'pimatic_' + Math.random().toString(16).substr(2, 8)
+        protocolId: @config.protocolId
+        protocolVersion: @config.protocolVer
+        reconnectPeriod: @config.reconnect
+        connectTimeout: @config.timeout
       )
 
       Connection = new Promise( (resolve, reject) =>
         @mqttclient = new mqtt.connect(options)
         @mqttclient.on("connect", () =>
           @connected = true
-          env.logger.info "Successful connected to MQTT Broker"
+          env.logger.info "Successfully connected to MQTT Broker"
           resolve()
         )
         @mqttclient.on('error', reject)
