@@ -50,6 +50,8 @@ Full config
       "port": 1883,
       "keepalive": 180,
       "clientId": "Pimatic_B",
+      "protocolId": "MQTT",
+      "protocolVer": 4,
       "reconnect": 5000,
       "timeout": 30000,
       "username": "test",
