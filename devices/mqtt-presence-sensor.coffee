@@ -5,8 +5,8 @@ module.exports = (env) ->
   class MqttPresenceSensor extends env.devices.PresenceSensor
 
     constructor: (@config, @plugin, lastState) ->
-      @id = config.id
-      @name = config.name
+      @id = @config.id
+      @name = @config.name
       @_presence = lastState?.presence?.value or false
 
       if @plugin.connected

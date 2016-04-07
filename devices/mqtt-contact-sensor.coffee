@@ -5,8 +5,8 @@ module.exports = (env) ->
   class MqttContactSensor extends env.devices.ContactSensor
 
     constructor: (@config, @plugin, lastState) ->
-      @id = config.id
-      @name = config.name
+      @id = @config.id
+      @name = @config.name
       @_contact = lastState?.contact?.value or false
 
       if @plugin.connected

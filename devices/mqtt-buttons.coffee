@@ -5,8 +5,8 @@ module.exports = (env) ->
   class MqttButtons extends env.devices.ButtonsDevice
 
     constructor: (@config, @plugin) ->
-      @name = config.name
-      @id = config.id
+      @name = @config.name
+      @id = @config.id
       super(@config)
 
       if @plugin.connected

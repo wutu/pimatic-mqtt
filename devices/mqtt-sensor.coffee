@@ -7,8 +7,8 @@ module.exports = (env) ->
   class MqttSensor extends env.devices.Sensor
 
     constructor: (@config, @plugin) ->
-      @name = config.name
-      @id = config.id
+      @name = @config.name
+      @id = @config.id
       @attributes = {}
       @mqttvars = []
 
