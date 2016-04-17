@@ -46,4 +46,20 @@ module.exports = {
       description: "Emit Pimatic data to the Broker"
       type: "boolean"
       default: false
+    certPath:
+      description: "Path to the certificate of the client in PEM format, required for TLS connection"
+      type: "string"
+      default: ""
+    keyPath:
+      description: "Path to the key of the client in PEM format, required for TLS connection"
+      type: "string"
+      default: ""
+    rejectUnauthorized:
+      description: "Whether to reject self signed certificates"
+      type: "boolean"
+      default: true
+    ca:
+      description: "Path to the trusted CA list"
+      type: "string"
+      default: ""
 }

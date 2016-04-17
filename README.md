@@ -56,22 +56,30 @@ Full config
       "timeout": 30000,
       "username": "test",
       "password": "mqtt"
+      "certPath":"/home/user/ca.crt"
+      "keyPath":"/home/user/ca.key"
+      "rejectUnauthorized":true
+      "ca":"/home/user/ca.pem"
     }
 
 The configuration for a broker is an object comprising the following properties.
 
-| Property    | Default     | Type    | Description                                                                             |
-|:------------|:------------|:--------|:----------------------------------------------------------------------------------------|
-| host        | "127.0.0.1" | String  | Broker hostname or IP                                                                   |
-| port        | 1883        | Integer | Broker port                                                                             |
-| keepalive   | 180         | Integer | Keepalive in seconds                                                                    |
-| clientId    | pimatic*    | String  | *pimatic + random number generation                                                     |
-| protocolId  | "MQTT"      | String  | With broker that supports only MQTT 3.1 (not 3.1.1 compliant), you should pass "MQIsdp" |
-| protocolVer | 4           | Integer | With broker that supports only MQTT 3.1 (not 3.1.1 compliant), you should pass 3        |
-| reconnect   | 5000        | Integer | Reconnect period in milliseconds                                                        |
-| timeout     | 30000       | Integer | Connect timeout in milliseconds                                                         |
-| username    | -           | String  | The login name                                                                          |
-| password    | -           | String  | The Password                                                                            |
+| Property            | Default     | Type    | Description                                                                             |
+|:--------------------|:------------|:--------|:----------------------------------------------------------------------------------------|
+| host                | "127.0.0.1" | String  | Broker hostname or IP                                                                   |
+| port                | 1883        | Integer | Broker port                                                                             |
+| keepalive           | 180         | Integer | Keepalive in seconds                                                                    |
+| clientId            | pimatic*    | String  | *pimatic + random number generation                                                     |
+| protocolId          | "MQTT"      | String  | With broker that supports only MQTT 3.1 (not 3.1.1 compliant), you should pass "MQIsdp" |
+| protocolVer         | 4           | Integer | With broker that supports only MQTT 3.1 (not 3.1.1 compliant), you should pass 3        |
+| reconnect           | 5000        | Integer | Reconnect period in milliseconds                                                        |
+| timeout             | 30000       | Integer | Connect timeout in milliseconds                                                         |
+| username            | -           | String  | The login name                                                                          |
+| password            | -           | String  | The Password                                                                            |
+| certPath            | -           | String  | Path to the certificate of the client in PEM format, required for TLS connection        |
+| keyPath             | -           | String  | Path to the key of the client in PEM format, required for TLS connection                |
+| rejectUnauthorized  | true        | String  | Whether to reject self signed certificates                                              |
+| ca                  | -           | String  | Path to the trusted CA list                                                             |
 
 
 ## Device Configuration
