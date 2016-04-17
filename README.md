@@ -178,7 +178,6 @@ Sample mqtt message: {"rel_pressue": "30.5015", "wind_ave": "0.00", "rain": "0",
       "class": "MqttSensor",
       "id": "weatherstation",
       "name": "Weather Station",
-      "mqtturl": "mqtt://localhost",
       "attributes": [
         {
           "name": "temp_in_c",
