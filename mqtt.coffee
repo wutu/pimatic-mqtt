@@ -38,7 +38,14 @@ module.exports = (env) ->
         protocolVersion: @config.protocolVer
         reconnectPeriod: @config.reconnect
         connectTimeout: @config.timeout
+        ca: @config.ca
+        certPath: @config.certPath
+        keyPath: @config.keyPath
+        rejectUnauthorized: @config.rejectUnauthorized
       )
+
+      if @config.ca and @config.certPath and @config.keyPath
+        options.protocol = 'mqtts'
 
       Connection = new Promise( (resolve, reject) =>
         @mqttclient = new mqtt.connect(options)
