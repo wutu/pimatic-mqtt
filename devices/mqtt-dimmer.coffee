@@ -63,3 +63,9 @@ module.exports = (env) ->
       return Promise.resolve()
 
     getDimlevel: -> Promise.resolve(@_dimlevel)
+
+    destroy: () ->
+     @plugin.mqttclient.unsubscribe(@config.topic)
+     if @stateTopic
+       @plugin.mqttclient.unsubscribe(@config.stateTopic)
+     super()

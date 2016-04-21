@@ -32,3 +32,7 @@ module.exports = (env) ->
       @plugin.mqttclient.subscribe(@config.topic)
 
     getPresence: () -> Promise.resolve(@_presence)
+
+    destroy: () ->
+     @plugin.mqttclient.unsubscribe(@config.topic)
+     super()

@@ -33,3 +33,7 @@ module.exports = (env) ->
       @plugin.mqttclient.subscribe(@config.topic)
 
     getContact: () -> Promise.resolve(@_contact)
+
+    destroy: () ->
+      @plugin.mqttclient.unsubscribe(@config.topic)
+      super()

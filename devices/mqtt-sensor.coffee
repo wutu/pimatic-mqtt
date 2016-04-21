@@ -81,4 +81,9 @@ module.exports = (env) ->
       for attr, i in @config.attributes
         do (attr) =>
           @plugin.mqttclient.subscribe(attr.topic)
-          env.logger.debug("subscribe: " + attr.topic)
+
+    destroy: () ->
+     for attr, i in @config.attributes
+        do (attr) =>
+          @plugin.mqttclient.unsubscribe(attr.topic)
+     super()

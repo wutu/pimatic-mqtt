@@ -45,3 +45,10 @@ module.exports = (env) ->
       @plugin.mqttclient.publish(@config.topic, message)
       @_setState(state)
       return Promise.resolve()
+
+    destroy: () ->
+      if @config.stateTopic == ""
+        @plugin.mqttclient.unsubscribe(@config.topic)
+      else
+        @plugin.mqttclient.unsubscribe(@config.stateTopic)
+      super()
