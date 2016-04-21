@@ -56,10 +56,10 @@ Full config
       "timeout": 30000,
       "username": "test",
       "password": "mqtt"
-      "certPath":"/home/user/ca.crt"
-      "keyPath":"/home/user/ca.key"
-      "rejectUnauthorized":true
-      "ca":"/home/user/ca.pem"
+      "certPath": "/home/user/ca.crt"
+      "keyPath": "/home/user/ca.key"
+      "rejectUnauthorized": true
+      "ca": "/home/user/ca.pem"
     }
 
 The configuration for a broker is an object comprising the following properties.
@@ -417,6 +417,7 @@ sudo /etc/init.d/mosquitto start
 
 ## To Do
 
+- [ ] Add RGB device
 - [x] Reflecting external condition for dimmer
 - [x] Reflecting external condition for buttons
 - [ ] QoS
@@ -429,10 +430,13 @@ sudo /etc/init.d/mosquitto start
 - [ ] Sending all variables from Pimatic to Broker/s
 - [ ] Control Pimatic over MQTT
 - [x] Integration with ActionProvider
+- [x] TLS support
+- [ ] Add shutter device
+- [ ] Add variable input device
 
 ## Credits
 
-<a href="https://github.com/sweetpi">sweet pi</a> for his work on best automatization software <a href="http://pimatic.org/">Pimatic</a> and all men from the pimatic community.
+<a href="https://github.com/sweetpi">sweet pi</a> for his work on best automatization software <a href="http://pimatic.org/">Pimatic</a> and all guys from the pimatic community.
 
 <a href="https://github.com/andremiller">Andre Miller</a> for for his module <a href="https://github.com/andremiller/pimatic-mqtt-simple/">pimatic-mqtt-simple</a> from which it comes also part of the code.
 
