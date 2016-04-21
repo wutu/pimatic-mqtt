@@ -56,22 +56,30 @@ Full config
       "timeout": 30000,
       "username": "test",
       "password": "mqtt"
+      "certPath": "/home/user/ca.crt"
+      "keyPath": "/home/user/ca.key"
+      "rejectUnauthorized": true
+      "ca": "/home/user/ca.pem"
     }
 
 The configuration for a broker is an object comprising the following properties.
 
-| Property    | Default     | Type    | Description                                                                             |
-|:------------|:------------|:--------|:----------------------------------------------------------------------------------------|
-| host        | "127.0.0.1" | String  | Broker hostname or IP                                                                   |
-| port        | 1883        | Integer | Broker port                                                                             |
-| keepalive   | 180         | Integer | Keepalive in seconds                                                                    |
-| clientId    | pimatic*    | String  | *pimatic + random number generation                                                     |
-| protocolId  | "MQTT"      | String  | With broker that supports only MQTT 3.1 (not 3.1.1 compliant), you should pass "MQIsdp" |
-| protocolVer | 4           | Integer | With broker that supports only MQTT 3.1 (not 3.1.1 compliant), you should pass 3        |
-| reconnect   | 5000        | Integer | Reconnect period in milliseconds                                                        |
-| timeout     | 30000       | Integer | Connect timeout in milliseconds                                                         |
-| username    | -           | String  | The login name                                                                          |
-| password    | -           | String  | The Password                                                                            |
+| Property            | Default     | Type    | Description                                                                             |
+|:--------------------|:------------|:--------|:----------------------------------------------------------------------------------------|
+| host                | "127.0.0.1" | String  | Broker hostname or IP                                                                   |
+| port                | 1883        | Integer | Broker port                                                                             |
+| keepalive           | 180         | Integer | Keepalive in seconds                                                                    |
+| clientId            | pimatic*    | String  | *pimatic + random number generation                                                     |
+| protocolId          | "MQTT"      | String  | With broker that supports only MQTT 3.1 (not 3.1.1 compliant), you should pass "MQIsdp" |
+| protocolVer         | 4           | Integer | With broker that supports only MQTT 3.1 (not 3.1.1 compliant), you should pass 3        |
+| reconnect           | 5000        | Integer | Reconnect period in milliseconds                                                        |
+| timeout             | 30000       | Integer | Connect timeout in milliseconds                                                         |
+| username            | -           | String  | The login name                                                                          |
+| password            | -           | String  | The Password                                                                            |
+| certPath            | -           | String  | Path to the certificate of the client in PEM format, required for TLS connection        |
+| keyPath             | -           | String  | Path to the key of the client in PEM format, required for TLS connection                |
+| rejectUnauthorized  | true        | String  | Whether to reject self signed certificates                                              |
+| ca                  | -           | String  | Path to the trusted CA list                                                             |
 
 
 ## Device Configuration
@@ -178,7 +186,6 @@ Sample mqtt message: {"rel_pressue": "30.5015", "wind_ave": "0.00", "rain": "0",
       "class": "MqttSensor",
       "id": "weatherstation",
       "name": "Weather Station",
-      "mqtturl": "mqtt://localhost",
       "attributes": [
         {
           "name": "temp_in_c",
@@ -410,6 +417,7 @@ sudo /etc/init.d/mosquitto start
 
 ## To Do
 
+- [ ] Add RGB device
 - [x] Reflecting external condition for dimmer
 - [x] Reflecting external condition for buttons
 - [ ] QoS
@@ -422,10 +430,13 @@ sudo /etc/init.d/mosquitto start
 - [ ] Sending all variables from Pimatic to Broker/s
 - [ ] Control Pimatic over MQTT
 - [x] Integration with ActionProvider
+- [x] TLS support
+- [ ] Add shutter device
+- [ ] Add variable input device
 
 ## Credits
 
-<a href="https://github.com/sweetpi">sweet pi</a> for his work on best automatization software <a href="http://pimatic.org/">Pimatic</a> and all men from the pimatic community.
+<a href="https://github.com/sweetpi">sweet pi</a> for his work on best automatization software <a href="http://pimatic.org/">Pimatic</a> and all guys from the pimatic community.
 
 <a href="https://github.com/andremiller">Andre Miller</a> for for his module <a href="https://github.com/andremiller/pimatic-mqtt-simple/">pimatic-mqtt-simple</a> from which it comes also part of the code.
 

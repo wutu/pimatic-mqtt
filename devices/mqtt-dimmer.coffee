@@ -5,8 +5,8 @@ module.exports = (env) ->
   class MqttDimmer extends env.devices.DimmerActuator
   
     constructor: (@config, @plugin, lastState) ->
-      @name = config.name
-      @id = config.id
+      @name = @config.name
+      @id = @config.id
       @_state = lastState?.state?.value or off
       @_dimlevel = lastState?.dimlevel?.value or 0
       @resolution = (@config.resolution - 1) or 255
@@ -63,3 +63,9 @@ module.exports = (env) ->
       return Promise.resolve()
 
     getDimlevel: -> Promise.resolve(@_dimlevel)
+
+    destroy: () ->
+     @plugin.mqttclient.unsubscribe(@config.topic)
+     if @stateTopic
+       @plugin.mqttclient.unsubscribe(@config.stateTopic)
+     super()

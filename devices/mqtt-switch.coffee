@@ -5,8 +5,8 @@ module.exports = (env) ->
   class MqttSwitch extends env.devices.PowerSwitch
 
     constructor: (@config, @plugin, lastState) ->
-      @name = config.name
-      @id = config.id
+      @name = @config.name
+      @id = @config.id
       @_state = lastState?.state?.value or off
       @_dimlevel = lastState?.dimlevel?.value or 0
 
@@ -45,3 +45,10 @@ module.exports = (env) ->
       @plugin.mqttclient.publish(@config.topic, message)
       @_setState(state)
       return Promise.resolve()
+
+    destroy: () ->
+      if @config.stateTopic == ""
+        @plugin.mqttclient.unsubscribe(@config.topic)
+      else
+        @plugin.mqttclient.unsubscribe(@config.stateTopic)
+      super()

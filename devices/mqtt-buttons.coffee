@@ -5,8 +5,8 @@ module.exports = (env) ->
   class MqttButtons extends env.devices.ButtonsDevice
 
     constructor: (@config, @plugin) ->
-      @name = config.name
-      @id = config.id
+      @name = @config.name
+      @id = @config.id
       super(@config)
 
       if @plugin.connected
@@ -35,3 +35,8 @@ module.exports = (env) ->
     onConnect: () ->
       for b in @config.buttons
         @plugin.mqttclient.subscribe(b.topic)
+
+    destroy: () ->
+      for b in @config.buttons
+        @plugin.mqttclient.unsubscribe(b.topic)
+      super()

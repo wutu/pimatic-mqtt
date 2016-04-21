@@ -7,8 +7,8 @@ module.exports = (env) ->
   class MqttSensor extends env.devices.Sensor
 
     constructor: (@config, @plugin) ->
-      @name = config.name
-      @id = config.id
+      @name = @config.name
+      @id = @config.id
       @attributes = {}
       @mqttvars = []
 
@@ -81,4 +81,9 @@ module.exports = (env) ->
       for attr, i in @config.attributes
         do (attr) =>
           @plugin.mqttclient.subscribe(attr.topic)
-          env.logger.debug("subscribe: " + attr.topic)
+
+    destroy: () ->
+     for attr, i in @config.attributes
+        do (attr) =>
+          @plugin.mqttclient.unsubscribe(attr.topic)
+     super()
