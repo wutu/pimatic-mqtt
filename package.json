@@ -11,6 +11,7 @@
     "mqtt-config-schema.coffee",
     "device-config-schema.coffee",
     "devices",
+    "predicates_and_actions",
     "README.md",
     "LICENSE"
   ],
