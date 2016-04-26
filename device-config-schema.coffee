@@ -74,9 +74,6 @@ module.exports = {
             displaySparkline:
               type: "boolean"
               default: true
-            messageMap:
-              type: "object"
-              default: ""
 
   }
   MqttPresenceSensor: {

@@ -24,19 +24,21 @@ module.exports = (env) ->
         for attr, i in @config.attributes
           do (attr) =>
             if attr.topic == topic
-              # payload = message.toString()
               @mqttvars[topic] = message.toString()
-              # try data = JSON.parse(message)
-              try data = flatten JSON.parse(message)
-              if typeof data is 'object' then for key, value of data
-                if key == attr.name
-                  if attr.type == 'number'
-                    if attr.division
-                      @emit attr.name, Number("#{value}") / attr.division
+              try data = JSON.parse(message)
+              console.log data
+              if Object.keys(data).length != 0
+                data = flatten(data)
+                console.log data
+                if typeof data is 'object' then for key, value of data
+                  if key == attr.name
+                    if attr.type == 'number'
+                      if attr.division
+                        @emit attr.name, Number("#{value}") / attr.division
+                      else
+                        @emit attr.name, Number("#{value}")
                     else
-                      @emit attr.name, Number("#{value}")
-                  else
-                    @emit attr.name, "#{value}"
+                      @emit attr.name, "#{value}"
               else
                 if attr.type == 'number'
                   if attr.division
@@ -81,6 +83,7 @@ module.exports = (env) ->
       for attr, i in @config.attributes
         do (attr) =>
           @plugin.mqttclient.subscribe(attr.topic)
+          env.logger.debug attr.topic
 
     destroy: () ->
      for attr, i in @config.attributes
