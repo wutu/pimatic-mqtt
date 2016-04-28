@@ -28,7 +28,6 @@ module.exports = (env) ->
               try data = JSON.parse(message)
               if typeof data is 'object' and Object.keys(data).length != 0
                 flat = flatten(data)
-                console.log flat
                 for key, value of flat
                   if key == attr.name
                     if attr.type == 'number'
