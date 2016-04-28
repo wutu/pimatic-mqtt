@@ -79,6 +79,9 @@ module.exports = {
             multiplier:
               type: "number"
               default: ""
+            messageMap:
+              type: "object"
+              default: ""
 
   }
   MqttPresenceSensor: {
