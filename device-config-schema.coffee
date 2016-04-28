@@ -55,25 +55,30 @@ module.exports = {
               description: "Attribute topic"
               type: "string"
             type:
-              description: "Attribute type: number or string"
+              description: "The type of the variable."
               type: "string"
+              default: "number"
+              enum: ["string", "number"]
             unit:
               description: "Attribute unit"
               type: "string"
               default: ""
             acronym:
-              description: "Attribute acronym"
+              description: "Acronym to show as value label in the frontend"
               type: "string"
               default: ""
             discrete:
+              description: "
+                Should be set to true if the value does not change continuously over time.
+              "
               type: "boolean"
               default: false
             division:
               type: "number"
               default: ""
-            displaySparkline:
-              type: "boolean"
-              default: true
+            multiplier:
+              type: "number"
+              default: ""
             messageMap:
               type: "object"
               default: ""

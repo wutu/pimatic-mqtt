@@ -40,3 +40,4 @@ module.exports = (env) ->
       for b in @config.buttons
         @plugin.mqttclient.unsubscribe(b.topic)
       super()
+
