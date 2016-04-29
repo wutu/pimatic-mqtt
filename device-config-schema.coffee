@@ -81,7 +81,7 @@ module.exports = {
               default: ""
             messageMap:
               type: "object"
-              default: ""
+              default: {}
 
   }
   MqttPresenceSensor: {
