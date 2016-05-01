@@ -76,7 +76,7 @@ module.exports = (env) ->
 
       @mqttclient.on 'close', () ->
         @connected = false
-        env.logger.debug "Connection with MQTT Broker was closed"
+        env.logger.debug "Connection with MQTT Broker was closed"  
 
       # register devices
       deviceConfigDef = require("./device-config-schema")
