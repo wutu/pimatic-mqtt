@@ -18,7 +18,7 @@ module.exports = (env) ->
 
       @plugin.mqttclient.on 'message', (topic, message) =>
         for b in @config.buttons
-          if b.topic == topic
+          if b.stateTopic == topic
             payload = message.toString()
           if payload == b.message
             @emit 'button', b.id
@@ -28,16 +28,19 @@ module.exports = (env) ->
       for b in @config.buttons
         if b.id is buttonId
           @emit 'button', b.id
-          @plugin.mqttclient.publish(b.topic, b.message)
+          @plugin.mqttclient.publish(b.topic, b.message, { qos: @config.qos, retain: @config.retain })
           return
 
 
     onConnect: () ->
       for b in @config.buttons
-        @plugin.mqttclient.subscribe(b.topic)
+        if not b.retain
+          @plugin.mqttclient.publish(b.topic, null)
+        if @stateTopic
+          @plugin.mqttclient.subscribe(b.stateTopic, { qos: @config.qos })
 
     destroy: () ->
       for b in @config.buttons
-        @plugin.mqttclient.unsubscribe(b.topic)
+        if b.stateTopic
+          @plugin.mqttclient.unsubscribe(b.stateTopic)
       super()
-

@@ -20,6 +20,15 @@ module.exports = {
         description: "Topic that communicates state, if exists"
         type: "string"
         default: ""
+      qos:
+        description: "The QoS level of the topic and stateTopic(if exist). Default is 0 and also be used to publishing messages."
+        type: "number"
+        default: 0
+        enum: [0, 1, 2]
+      retain:
+        description: "If the published message should have the retain flag on or not."
+        type: "boolean"
+        default: false
   }
   MqttDimmer: {
     title: "MqttDimmer config options"
@@ -33,6 +42,19 @@ module.exports = {
         description: "Device resolution"
         type: "integer"
         default: 256
+      stateTopic:
+        description: "Topic that communicates state, if exists"
+        type: "string"
+        default: ""
+      qos:
+        description: "The QoS level of the topic and stateTopic(if exist). Default is 0 and also be used to publishing messages."
+        type: "number"
+        default: 0
+        enum: [0, 1, 2]
+      retain:
+        description: "If the published message should have the retain flag on or not."
+        type: "boolean"
+        default: false
   }
   MqttSensor: {
     title: "MqttSensor config options"
@@ -54,6 +76,11 @@ module.exports = {
             topic:
               description: "Attribute topic"
               type: "string"
+            qos:
+              description: "The QoS level of the topic and stateTopic(if exist). Default is 0 and also be used to publishing messages."
+              type: "number"
+              default: 0
+              enum: [0, 1, 2]
             type:
               description: "The type of the variable."
               type: "string"
@@ -68,9 +95,7 @@ module.exports = {
               type: "string"
               default: ""
             discrete:
-              description: "
-                Should be set to true if the value does not change continuously over time.
-              "
+              description: "Should be set to true if the value does not change continuously over time."
               type: "boolean"
               default: false
             division:
@@ -101,6 +126,11 @@ module.exports = {
         description: "Message that invokes negative status"
         type: "string"
         default: "0"
+      qos:
+        description: "The QoS level of the topic and stateTopic(if exist). Default is 0 and also be used to publishing messages."
+        type: "number"
+        default: 0
+        enum: [0, 1, 2]
   }
   MqttContactSensor: {
     title: "MqttContactSensor config options"
@@ -119,6 +149,11 @@ module.exports = {
         description: "Message that invokes negative status"
         type: "string"
         default: "0"
+      qos:
+        description: "The QoS level of the topic and stateTopic(if exist). Default is 0 and also be used to publishing messages."
+        type: "number"
+        default: 0
+        enum: [0, 1, 2]
   }
   MqttButtons: {
     title: "MqttButtons config options"
@@ -138,12 +173,25 @@ module.exports = {
             text:
               type: "string"
             topic:
-              description: "Device topic"
+              description: "The MQTT topic to publish commands"
               type: "string"
             message:
               description: "Message"
               type: "string"
               default: "1"
+            stateTopic:
+              description: "Topic that communicates state, if exists"
+              type: "string"
+              default: ""
+            qos:
+              description: "The QoS level of the topic and stateTopic(if exist). Default is 0 and also be used to publishing messages."
+              type: "number"
+              default: 0
+              enum: [0, 1, 2]
+            retain:
+              description: "If the published message should have the retain flag on or not."
+              type: "boolean"
+              default: false
             confirm:
               description: "Ask the user to confirm the button press"
               type: "boolean"

@@ -10,6 +10,8 @@ module.exports = (env) ->
       @_state = lastState?.state?.value or off
       @_dimlevel = lastState?.dimlevel?.value or 0
 
+      if not @config.retain
+        @plugin.mqttclient.publish(@config.topic, null)
 
       if @plugin.connected
         @onConnect()
@@ -19,7 +21,7 @@ module.exports = (env) ->
       )
 
       @plugin.mqttclient.on('message', (topic, message) =>
-        if (@config.stateTopic == "" && @config.topic == topic) || (@config.stateTopic != "" && @config.stateTopic == topic)
+        if @config.stateTopic ==  topic
           switch message.toString()
             when @config.onMessage
               @_setState(on)
@@ -35,20 +37,16 @@ module.exports = (env) ->
       super()
 
     onConnect: () ->
-      if @config.stateTopic == ""
-        @plugin.mqttclient.subscribe(@config.topic)
-      else
-        @plugin.mqttclient.subscribe(@config.stateTopic)
+      if @config.stateTopic
+        @plugin.mqttclient.subscribe(@config.stateTopic, { qos: @config.qos })
 
     changeStateTo: (state) ->
       message = (if state then @config.onMessage else @config.offMessage)
-      @plugin.mqttclient.publish(@config.topic, message)
+      @plugin.mqttclient.publish(@config.topic, message, { qos: @config.qos, retain: @config.retain })
       @_setState(state)
       return Promise.resolve()
 
     destroy: () ->
-      if @config.stateTopic == ""
-        @plugin.mqttclient.unsubscribe(@config.topic)
-      else
+      if @config.stateTopic
         @plugin.mqttclient.unsubscribe(@config.stateTopic)
       super()

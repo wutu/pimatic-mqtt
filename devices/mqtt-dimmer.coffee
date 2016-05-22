@@ -11,6 +11,9 @@ module.exports = (env) ->
       @_dimlevel = lastState?.dimlevel?.value or 0
       @resolution = (@config.resolution - 1) or 255
 
+      if not @config.retain
+        @plugin.mqttclient.publish(@config.topic, null)
+
       if @plugin.connected
         @onConnect()
 
@@ -18,9 +21,8 @@ module.exports = (env) ->
         @onConnect()
       )
 
-      # For reflecting external condition
       @plugin.mqttclient.on 'message', (topic, message) =>
-        if @config.topic == topic
+        if @config.stateTopic == topic
           payload = message.toString()
           @getPerCentlevel(payload)
           if @perCentlevel != @_dimlevel
@@ -30,9 +32,8 @@ module.exports = (env) ->
       super()
 
     onConnect: () ->
-      @plugin.mqttclient.subscribe(@config.topic)
-      if @stateTopic
-        @plugin.mqttclient.subscribe(@config.stateTopic)
+      if @config.stateTopic
+        @plugin.mqttclient.subscribe(@config.stateTopic, { qos: @config.qos })
 
 
     # Convert the PWM resolution by config value
@@ -49,23 +50,22 @@ module.exports = (env) ->
 
     turnOn: ->
       @getDevLevel(100)
-      @plugin.mqttclient.publish(@config.topic, @devLevel)
+      @plugin.mqttclient.publish(@config.topic, @devLevel, { qos: @config.qos, retain: @config.retain })
       return Promise.resolve()
       
     turnOff: ->
-      @plugin.mqttclient.publish(@config.topic, 0)
+      @plugin.mqttclient.publish(@config.topic, 0, { qos: @config.qos, retain: @config.retain })
       return Promise.resolve()
 
     changeDimlevelTo: (dimlevel) ->
       @getDevLevel(dimlevel)
-      @plugin.mqttclient.publish(@config.topic, @devLevel)
+      @plugin.mqttclient.publish(@config.topic, @devLevel, { qos: @config.qos, retain: @config.retain })
       @_setDimlevel(dimlevel)
       return Promise.resolve()
 
     getDimlevel: -> Promise.resolve(@_dimlevel)
 
     destroy: () ->
-     @plugin.mqttclient.unsubscribe(@config.topic)
-     if @stateTopic
+     if @config.stateTopic
        @plugin.mqttclient.unsubscribe(@config.stateTopic)
      super()

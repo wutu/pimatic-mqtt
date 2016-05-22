@@ -66,7 +66,6 @@ module.exports = (env) ->
           @attributes[name].unit = attr.unit or ''
           @attributes[name].discrete = attr.discrete or false
           @attributes[name].acronym = attr.acronym or null
-          @attributes[name].division = attr.division or 1
 
           getter = ( =>
             if attr.type == 'number'
@@ -84,8 +83,8 @@ module.exports = (env) ->
       # Subscribe to the topics
       for attr, i in @config.attributes
         do (attr) =>
-          @plugin.mqttclient.subscribe(attr.topic)
-          env.logger.debug attr.topic
+          _qos = attr.qos or 0
+          @plugin.mqttclient.subscribe(attr.topic, { qos: _qos })
 
     destroy: () ->
      for attr, i in @config.attributes

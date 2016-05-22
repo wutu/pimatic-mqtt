@@ -29,7 +29,7 @@ module.exports = (env) ->
       super()
 
     onConnect: () ->
-      @plugin.mqttclient.subscribe(@config.topic)
+      @plugin.mqttclient.subscribe(@config.topic, { qos: @config.qos })
 
     getPresence: () -> Promise.resolve(@_presence)
 
