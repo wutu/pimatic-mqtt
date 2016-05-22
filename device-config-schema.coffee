@@ -99,9 +99,11 @@ module.exports = {
               type: "boolean"
               default: false
             division:
+              description: "Should be set to true if the value does not change continuously over time."
               type: "number"
               default: ""
             multiplier:
+              description: "Constant that will multiply the value obtained."
               type: "number"
               default: ""
             messageMap:
@@ -169,8 +171,10 @@ module.exports = {
           type: "object"
           properties:
             id:
+              description: "Button id"
               type: "string"
             text:
+              description: "Button text"
               type: "string"
             topic:
               description: "The MQTT topic to publish commands"
