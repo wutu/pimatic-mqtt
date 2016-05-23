@@ -37,6 +37,20 @@
   "bugs": {
     "url": "https://github.com/wutu/pimatic-mqtt/issues"
   },
+  "contributors": [
+    {
+      "name": "kcsoft",
+      "url": "https://github.com/kcsoft"
+    },
+    {
+      "name": "Marcus Wittig",
+      "url": "https://github.com/mwitig"
+    },
+    {
+      "name": "Jonathan Foucher",
+      "url": "https://github.com/jfoucher"
+    }
+  ],
   "keywords": [
     "pimatic",
     "mqtt",
