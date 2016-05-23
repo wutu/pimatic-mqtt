@@ -233,14 +233,14 @@ It has the following configuration properties:
 | Property   | Default  | Type    | Description                                 |
 |:-----------|:---------|:--------|:--------------------------------------------|
 | topic      | -        | String  | Topic for device state           |
-| qos        | 0        | Number  | The QoS level of the topic and stateTopic(if exist)           |
+| qos        | 0        | Number  | The QoS level of the topic and stateTopic (if exist)           |
 | type       | "number" | String  | The type of the variable(string or number)                 |
 | unit       | -        | String  | Attribute unit                  |
 | acronym    | -        | String  | Acronym to show as value label in the frontend          |
 | discrete   | false    | Boolean | Should be set to true if the value does not change continuously over time.          |
 | division   | -        | Number  | Constants that will divide the value obtained          |
 | multiplier | -        | Number  | Constant that will multiply the value obtained          |
-| messageMap | -        | String  | Topic that communicates state, if exists          |
+| messageMap | -        | Object  | Even Pimatic 9, you must manually configure this. We're working on it.          |
 
 ### Switch Device
 
@@ -263,7 +263,7 @@ It has the following configuration properties:
 | onMessage  | "1"      | String  | Message to switch on                  |
 | offMessage | "0"      | String  | Message to switch off                  |
 | stateTopic | -        | String  | Topic that communicates state, if exists          |
-| qos        | 0        | Number  | The QoS level of the topic and stateTopic(if exist)           |
+| qos        | 0        | Number  | The QoS level of the topic and stateTopic (if exist)           |
 | retain     | false    | Boolean | If the published message should have the retain flag on or not.           |
 
 
@@ -299,7 +299,7 @@ It has the following configuration properties:
 | topic      | -        | String  | Topic for device state           |
 | onMessage  | "1"      | String  | Message that invokes positive status                  |
 | offMessage | "0"      | String  | Message that invokes negative status                  |
-| qos        | 0        | Number  | The QoS level of the topic and stateTopic(if exist)           |
+| qos        | 0        | Number  | The QoS level of the topic and stateTopic (if exist)           |
 
 The presence sensor exhibits the following attributes:
 
@@ -331,7 +331,7 @@ It has the following configuration properties:
 | topic      | -        | String  | Topic for device state           |
 | onMessage  | "1"      | String  | Message that invokes positive status                  |
 | offMessage | "0"      | String  | Message that invokes negative status                  |
-| qos        | 0        | Number  | The QoS level of the topic and stateTopic(if exist)           |
+| qos        | 0        | Number  | The QoS level of the topic and stateTopic (if exist)           |
 
 The presence sensor exhibits the following attributes:
 
@@ -370,7 +370,7 @@ It has the following configuration properties:
 | topic      | -        | String  | Topic for control dimmer brightness.             |
 | resolution | 256      | Integer | Resolution of this dimmer. For percent set 101. |
 | stateTopic | -        | String  | Topic that communicates state, if exists          |
-| qos        | 0        | Number  | The QoS level of the topic and stateTopic(if exist)           |
+| qos        | 0        | Number  | The QoS level of the topic and stateTopic (if exist)           |
 | retain     | false    | Boolean | If the published message should have the retain flag on or not.           |
 
 The Dimmer Action Provider:
@@ -400,11 +400,11 @@ It has the following configuration properties for each button:
 | Property   | Default  | Type    | Description                                 |
 |:-----------|:---------|:--------|:--------------------------------------------|
 | id         | -        | String  | Button id          |
-| text       | -    | String  | Button text          |
+| text       | -        | String  | Button text          |
 | topic      | -        | String  | Topic for device state           |
 | message    | -        | String  | Publish message when pressed              |
 | stateTopic | -        | String  | Topic that communicates state, if exists          |
-| qos        | 0        | Number  | The QoS level of the topic and stateTopic(if exist)           |
+| qos        | 0        | Number  | The QoS level of the topic and stateTopic (if exist)           |
 | retain     | false    | Boolean | If the published message should have the retain flag on or not.           |
 | confirm    | false    | Boolean | Ask the user to confirm the button press           |
 
@@ -433,7 +433,7 @@ You can publish mqtt messages in rules with the action:
 - [ ] Add RGB device
 - [x] Reflecting external condition for dimmer
 - [x] Reflecting external condition for buttons
-- [ ] QoS
+- [x] QoS and ratain flag
 - [x] Processing JSON-encoded object
 - [x] Make payload configurable for all device
 - [x] Buttons Device
