@@ -405,7 +405,6 @@ It has the following configuration properties for each button:
 | message    | -        | String  | Publish message when pressed              |
 | stateTopic | -        | String  | Topic that communicates state, if exists          |
 | qos        | 0        | Number  | The QoS level of the topic and stateTopic (if exist)           |
-| retain     | false    | Boolean | If the published message should have the retain flag on or not.           |
 | confirm    | false    | Boolean | Ask the user to confirm the button press           |
 
 The Button Action Provider

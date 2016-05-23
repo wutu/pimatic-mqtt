@@ -21,13 +21,14 @@ module.exports = (env) ->
         @onConnect()
       )
 
-      @plugin.mqttclient.on 'message', (topic, message) =>
-        if @config.stateTopic == topic
-          payload = message.toString()
-          @getPerCentlevel(payload)
-          if @perCentlevel != @_dimlevel
-            @_setDimlevel(@perCentlevel)
-            @emit @dimlevel, @perCentlevel
+      if @config.stateTopic
+        @plugin.mqttclient.on 'message', (topic, message) =>
+          if @config.stateTopic == topic
+            payload = message.toString()
+            @getPerCentlevel(payload)
+            if @perCentlevel != @_dimlevel
+              @_setDimlevel(@perCentlevel)
+              @emit @dimlevel, @perCentlevel
 
       super()
 

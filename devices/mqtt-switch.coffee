@@ -20,20 +20,22 @@ module.exports = (env) ->
         @onConnect()
       )
 
-      @plugin.mqttclient.on('message', (topic, message) =>
-        if @config.stateTopic ==  topic
-          switch message.toString()
-            when @config.onMessage
-              @_setState(on)
-              @_state = on
-              @emit "state", on
-            when @config.offMessage
-              @_setState(off)
-              @_state = off
-              @emit "state", off
-            else
-              env.logger.debug "#{@name} with id:#{@id}: Message is not harmony with onMessage or offMessage in config.json or with default values"
-      )
+      if @config.stateTopic
+        @plugin.mqttclient.on('message', (topic, message) =>
+          if @config.stateTopic ==  topic
+            switch message.toString()
+              when @config.onMessage
+                @_setState(on)
+                @_state = on
+                @emit "state", on
+              when @config.offMessage
+                @_setState(off)
+                @_state = off
+                @emit "state", off
+              else
+                env.logger.debug "#{@name} with id:#{@id}: Message is not harmony with onMessage or offMessage in config.json or with default values"
+        )
+        
       super()
 
     onConnect: () ->

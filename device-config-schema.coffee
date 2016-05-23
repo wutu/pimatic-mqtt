@@ -192,10 +192,6 @@ module.exports = {
               type: "number"
               default: 0
               enum: [0, 1, 2]
-            retain:
-              description: "If the published message should have the retain flag on or not."
-              type: "boolean"
-              default: false
             confirm:
               description: "Ask the user to confirm the button press"
               type: "boolean"
