@@ -38,8 +38,6 @@ module.exports = (env) ->
       for b in @config.buttons
         if b.stateTopic
           @plugin.mqttclient.subscribe(b.stateTopic, { qos: b.qos or 0 })
-        if not b.retain
-          @plugin.mqttclient.publish(b.topic, null)
 
     destroy: () ->
       for b in @config.buttons

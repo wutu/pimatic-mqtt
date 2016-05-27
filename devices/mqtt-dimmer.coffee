@@ -11,9 +11,6 @@ module.exports = (env) ->
       @_dimlevel = lastState?.dimlevel?.value or 0
       @resolution = (@config.resolution - 1) or 255
 
-      if not @config.retain
-        @plugin.mqttclient.publish(@config.topic, null)
-
       if @plugin.connected
         @onConnect()
 

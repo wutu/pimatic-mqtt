@@ -36,8 +36,10 @@ module.exports = (env) ->
         clientId: @config.clientId or 'pimatic_' + Math.random().toString(16).substr(2, 8)
         protocolId: @config.protocolId
         protocolVersion: @config.protocolVer
+        clean: @config.cleanSession
         reconnectPeriod: @config.reconnect
         connectTimeout: @config.timeout
+        queueQoSZero: @config.queueQoSZero
         ca: @config.ca
         certPath: @config.certPath
         keyPath: @config.keyPath

@@ -26,6 +26,10 @@ module.exports = {
       description: "MQTT protocol version"
       type: "integer"
       default: 4
+    cleanSession:
+      description: "Set to false to receive QoS 1 and 2 messages while offline"
+      type: "boolean"
+      default: true
     reconnect:
       description: "reconnectPeriod in milliseconds"
       type: "integer"
@@ -42,10 +46,10 @@ module.exports = {
       description: "The password"
       type: "string"
       default: ""
-    emit:
-      description: "Emit Pimatic data to the Broker"
+    queueQoSZero:
+      description: "If connection is broken, queue outgoing QoS zero messages"
       type: "boolean"
-      default: false
+      default: true
     certPath:
       description: "Path to the certificate of the client in PEM format, required for TLS connection"
       type: "string"
