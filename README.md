@@ -72,13 +72,15 @@ The configuration for a broker is an object comprising the following properties.
 | clientId            | pimatic*    | String  | *pimatic + random number generation                                                     |
 | protocolId          | "MQTT"      | String  | With broker that supports only MQTT 3.1 (not 3.1.1 compliant), you should pass "MQIsdp" |
 | protocolVer         | 4           | Integer | With broker that supports only MQTT 3.1 (not 3.1.1 compliant), you should pass 3        |
+| cleanSession        | true        | Boolean | Set to false to receive QoS 1 and 2 messages while offline                              |
 | reconnect           | 5000        | Integer | Reconnect period in milliseconds                                                        |
 | timeout             | 30000       | Integer | Connect timeout in milliseconds                                                         |
+| queueQoSZero        | true        | Boolean | If connection is broken, queue outgoing QoS zero messages                               |
 | username            | -           | String  | The login name                                                                          |
 | password            | -           | String  | The Password                                                                            |
 | certPath            | -           | String  | Path to the certificate of the client in PEM format, required for TLS connection        |
 | keyPath             | -           | String  | Path to the key of the client in PEM format, required for TLS connection                |
-| rejectUnauthorized  | true        | String  | Whether to reject self signed certificates                                              |
+| rejectUnauthorized  | true        | Boolean | Whether to reject self signed certificates                                              |
 | ca                  | -           | String  | Path to the trusted CA list                                                             |
 
 
