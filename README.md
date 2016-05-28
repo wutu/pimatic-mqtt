@@ -52,8 +52,10 @@ Full config
       "clientId": "Pimatic_B",
       "protocolId": "MQTT",
       "protocolVer": 4,
+      "cleanSession": true,
       "reconnect": 5000,
       "timeout": 30000,
+      "queueQoSZero": true,
       "username": "test",
       "password": "mqtt"
       "certPath": "/home/user/ca.crt"
@@ -69,7 +71,7 @@ The configuration for a broker is an object comprising the following properties.
 | host                | "127.0.0.1" | String  | Broker hostname or IP                                                                   |
 | port                | 1883        | Integer | Broker port                                                                             |
 | keepalive           | 180         | Integer | Keepalive in seconds                                                                    |
-| clientId            | pimatic*    | String  | *pimatic + random number generation                                                     |
+| clientId            | pimatic*    | String  | *pimatic + random number generation or your own clientId                                |
 | protocolId          | "MQTT"      | String  | With broker that supports only MQTT 3.1 (not 3.1.1 compliant), you should pass "MQIsdp" |
 | protocolVer         | 4           | Integer | With broker that supports only MQTT 3.1 (not 3.1.1 compliant), you should pass 3        |
 | cleanSession        | true        | Boolean | Set to false to receive QoS 1 and 2 messages while offline                              |
