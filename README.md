@@ -254,7 +254,8 @@ It has the following configuration properties:
       "name": "MQTT Switch",
       "id": "switch",
       "class": "MqttSwitch",
-      "topic": "wemosd1r2/gpio/2",
+      "topic": "wemosd1r2/gpio/2/set",
+      "stateTopic": "wemosd1r2/gpio/2/state"
       "onMessage": "1",
       "offMessage": "0"
     }
@@ -357,6 +358,7 @@ The following predicates are supported:
       "id": "mqtt-dimmer",
       "class": "MqttDimmer",
       "topic": "wemosd1r2/pcapwm/5/brightness",
+      "stateTopic": "wemosd1r2/pcapwm/5/state",
       "resolution": 4096
     },
     {
@@ -444,7 +446,7 @@ You can publish mqtt messages in rules with the action:
 - [ ] Configurable CIE1931 correction for Dimmer
 - [ ] Support for more then one Broker
 - [ ] Sending all variables from Pimatic to Broker/s
-- [ ] Control Pimatic over MQTT
+- [ ] Control Pimatic over MQTT :)
 - [x] Integration with ActionProvider
 - [x] TLS support
 - [ ] Add shutter device

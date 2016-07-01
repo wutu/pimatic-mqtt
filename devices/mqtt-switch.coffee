@@ -8,7 +8,6 @@ module.exports = (env) ->
       @name = @config.name
       @id = @config.id
       @_state = lastState?.state?.value or off
-      @_dimlevel = lastState?.dimlevel?.value or 0
 
       if @plugin.connected
         @onConnect()
