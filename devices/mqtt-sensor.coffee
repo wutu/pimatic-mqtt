@@ -33,8 +33,10 @@ module.exports = (env) ->
                     if attr.type == 'number'
                       if attr.division
                         @emit attr.name, Number("#{value}") / attr.division
+                        return
                       if attr.multiplier
                         @emit attr.name, Number("#{value}") * attr.multiplier
+                        return
                       else
                         @emit attr.name, Number("#{value}")
                     else
@@ -43,13 +45,16 @@ module.exports = (env) ->
                 if attr.type == 'number'
                   if attr.division
                     @emit attr.name, Number(message) / attr.division
+                    return
                   if attr.multiplier
                     @emit attr.name, Number(message) * attr.multiplier
+                    return
                   else
                     @emit attr.name, Number(message)
                 else
                   if attr.messageMap && attr.messageMap[message]
                     @emit attr.name, attr.messageMap[message]
+                    return
                   else
                     @emit attr.name, message.toString()
       )

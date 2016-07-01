@@ -8,10 +8,6 @@ module.exports = (env) ->
       @name = @config.name
       @id = @config.id
       @_state = lastState?.state?.value or off
-      @_dimlevel = lastState?.dimlevel?.value or 0
-
-      if not @config.retain
-        @plugin.mqttclient.publish(@config.topic, null)
 
       if @plugin.connected
         @onConnect()
