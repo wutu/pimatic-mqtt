@@ -16,7 +16,7 @@
     "README.md",
     "LICENSE"
   ],
-  "version": "0.8.14",
+  "version": "0.8.15",
   "homepage": "http://github.com/wutu/pimatic-mqtt",
   "repository": {
     "type": "git",
