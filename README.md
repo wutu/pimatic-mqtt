@@ -421,12 +421,12 @@ The Button Action Provider
 
 You can publish mqtt messages in rules with the action:
 
-`publish mqtt message "<string with variables>" on topic "<string with variables>"`
+`publish mqtt message "<string with variables>" on topic "<string with variables>" [qos: 0|1|2] [retain: true|false]`
 
     "rules": [
       {
         "id": "my-rule",
-        "rule": "if every 1 minutes then publish mqtt message \"some message\" on topic \"my/topic\"",
+        "rule": "if every 1 minutes then publish mqtt message \"some message\" on topic \"my/topic\" qos: 1 retain: true",
         "active": true,
         "logging": false,
         "name": "Publish mqtt"
