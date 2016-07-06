@@ -10,14 +10,15 @@ module.exports = (env) ->
     executeAction: (simulate) ->
       @framework.variableManager.evaluateStringExpression(@stringTopic).then( (strTopic) =>
         @framework.variableManager.evaluateStringExpression(@stringMessage).then( (strMessage) =>
-          @framework.variableManager.evaluateNumericExpression(@stringQoS).then( (numQoS) =>
-            @framework.variableManager.evaluateExpression(@stringRetain).then( (ret) =>
-              retFlag = if ret is "true" then true else false
+          @framework.variableManager.evaluateExpression(@stringQoS).then( (strQoS) =>
+            @framework.variableManager.evaluateExpression(@stringRetain).then( (strRet) =>
               if simulate
-                return Promise.resolve("publish mqtt message " + strMessage + " on topic " + strTopic + " qos: " + numQoS + " retain: " + retFlag)
+                return Promise.resolve("publish mqtt message " + strMessage + " on topic " + strTopic + " qos: " + strQoS + " retain: " + strRet)
               else
+                retFlag = if strRet is "true" then true else false
+                numQoS = Number(strQoS)
                 @mqttclient.publish(strTopic, strMessage, { qos: numQoS, retain: retFlag})
-                return Promise.resolve("publish mqtt message " + strMessage + " on topic " + strTopic + " qos: " + numQoS + " retain: " + retFlag)
+                return Promise.resolve("publish mqtt message " + strMessage + " on topic " + strTopic + " qos: " + strQoS + " retain: " + strRet)
             )
           )
         )    
@@ -34,7 +35,7 @@ module.exports = (env) ->
 
       stringMessage = null
       stringTopic = null
-      stringQoS = strToTokens "0"
+      stringQoS = strToTokens '0'
       stringRetain = strToTokens "false"
       match = null
 
@@ -57,6 +58,7 @@ module.exports = (env) ->
 
       if m.hadMatch()
         match = m.getFullMatch()
+        console.log match
         return {
           token: match
           nextInput: input.substring(match.length)
