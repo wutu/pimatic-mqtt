@@ -27,7 +27,7 @@ module.exports = (env) ->
           if @config.stateTopic == topic
             payload = message.toString()
             @getPerCentlevel(payload)
-            if @perCentlevel != @_dimlevel
+            if @perCentlevel != @_dimlevel && @perCentlevel <= 100
               @_setDimlevel(@perCentlevel)
               @emit @dimlevel, @perCentlevel
 

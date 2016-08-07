@@ -63,7 +63,7 @@ module.exports = (env) ->
           mqttclient = new mqtt.connect(options)
           mqttclient.on("connect", () =>
             broker.connected = true
-            env.logger.info "Successfully connected to MQTT Broker (#{broker.id})"
+            env.logger.info "Successfully connected to MQTT Broker"
             resolve()
           )
           mqttclient.on('error', reject)
