@@ -2,25 +2,28 @@ module.exports = (env) ->
 
   Promise = env.require 'bluebird'
   flatten = require 'flat'
+  assert = env.require 'cassert'
 
   # Code comes from the module pimatic-mqtt-simple. The author is Andre Miller (https://github.com/andremiller).
   class MqttSensor extends env.devices.Sensor
 
     constructor: (@config, @plugin) ->
+      assert(@plugin.brokers[@config.brokerId])
+
       @name = @config.name
       @id = @config.id
       @attributes = {}
       @mqttvars = []
+      @mqttclient = @plugin.brokers[@config.brokerId].client
 
-      if @plugin.connected
+      if @plugin.brokers[@config.brokerId].connected
         @onConnect()
 
-      @plugin.mqttclient.on('connect', =>
+      @mqttclient.on('connect', =>
         @onConnect()
       )
 
-       
-      @plugin.mqttclient.on('message', (topic, message) =>
+      @mqttclient.on('message', (topic, message) =>
         for attr, i in @config.attributes
           do (attr) =>
             if attr.topic == topic
@@ -89,10 +92,10 @@ module.exports = (env) ->
       for attr, i in @config.attributes
         do (attr) =>
           _qos = attr.qos or 0
-          @plugin.mqttclient.subscribe(attr.topic, { qos: _qos })
+          @mqttclient.subscribe(attr.topic, { qos: _qos })
 
     destroy: () ->
      for attr, i in @config.attributes
         do (attr) =>
-          @plugin.mqttclient.unsubscribe(attr.topic)
+          @mqttclient.unsubscribe(attr.topic)
      super()
