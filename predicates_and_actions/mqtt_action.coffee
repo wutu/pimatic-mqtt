@@ -58,7 +58,6 @@ module.exports = (env) ->
 
       if m.hadMatch()
         match = m.getFullMatch()
-        console.log match
         return {
           token: match
           nextInput: input.substring(match.length)
