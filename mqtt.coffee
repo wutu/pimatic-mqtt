@@ -3,6 +3,7 @@ module.exports = (env) ->
 
   mqtt = require 'mqtt'
   Promise = env.require 'bluebird'
+  pluginConfigDef = require './mqtt-config-schema'
 
   deviceTypes = {}
   for device in [
@@ -25,10 +26,18 @@ module.exports = (env) ->
 
     # transfer config - from single Broker to multiple Brokers
     prepareConfig: (config) =>
-      if not config.brokers?
-        delete config.host
-        delete config.port
-        config.brokers = [ "brokerId": "default", "host": "localhost", "port": 1883 ]
+      try
+        if not config.brokers?
+          keys = Object.keys pluginConfigDef.properties.brokers.items.properties
+          broker = {}
+          keys.forEach (key) =>
+            if config[key]?
+              broker[key] = config[key]
+              delete config[key]?
+          config.brokers = []
+          config.brokers.push broker
+      catch error
+        env.logger.error "Unable to migrate config: " + error
 
     init: (app, @framework, @config) =>
 
