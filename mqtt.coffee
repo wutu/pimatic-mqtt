@@ -33,9 +33,11 @@ module.exports = (env) ->
           keys.forEach (key) =>
             if config[key]?
               broker[key] = config[key]
-              delete config[key]?
+              delete config[key]
           config.brokers = []
-          config.brokers.push broker
+          broker["brokerId"] = "default"
+          if broker?
+            config.brokers.push broker
       catch error
         env.logger.error "Unable to migrate config: " + error
 
