@@ -1,22 +1,26 @@
 module.exports = (env) ->
 
   Promise = env.require 'bluebird'
+  assert = env.require 'cassert'
 
   class MqttPresenceSensor extends env.devices.PresenceSensor
 
     constructor: (@config, @plugin, lastState) ->
+      assert(@plugin.brokers[@config.brokerId])
+
       @id = @config.id
       @name = @config.name
       @_presence = lastState?.presence?.value or false
+      @mqttclient = @plugin.brokers[@config.brokerId].client
 
-      if @plugin.connected
+      if @plugin.brokers[@config.brokerId].connected
         @onConnect()
 
-      @plugin.mqttclient.on('connect', =>
+      @mqttclient.on('connect', =>
         @onConnect()
       )
 
-      @plugin.mqttclient.on('message', (topic, message) =>
+      @mqttclient.on('message', (topic, message) =>
         if @config.topic == topic
           switch message.toString()
             when @config.onMessage
@@ -29,10 +33,10 @@ module.exports = (env) ->
       super()
 
     onConnect: () ->
-      @plugin.mqttclient.subscribe(@config.topic, { qos: @config.qos })
+      @mqttclient.subscribe(@config.topic, { qos: @config.qos })
 
     getPresence: () -> Promise.resolve(@_presence)
 
     destroy: () ->
-     @plugin.mqttclient.unsubscribe(@config.topic)
+     @mqttclient.unsubscribe(@config.topic)
      super()

@@ -1,23 +1,27 @@
 module.exports = (env) ->
 
   Promise = env.require 'bluebird'
+  assert = env.require 'cassert'
 
   class MqttSwitch extends env.devices.PowerSwitch
 
     constructor: (@config, @plugin, lastState) ->
+      assert(@plugin.brokers[@config.brokerId])
+
       @name = @config.name
       @id = @config.id
       @_state = lastState?.state?.value or off
+      @mqttclient = @plugin.brokers[@config.brokerId].client
 
-      if @plugin.connected
+      if @plugin.brokers[@config.brokerId].connected
         @onConnect()
 
-      @plugin.mqttclient.on('connect', =>
+      @mqttclient.on('connect', =>
         @onConnect()
       )
 
       if @config.stateTopic
-        @plugin.mqttclient.on('message', (topic, message) =>
+        @mqttclient.on('message', (topic, message) =>
           if @config.stateTopic ==  topic
             switch message.toString()
               when @config.onMessage
@@ -31,20 +35,20 @@ module.exports = (env) ->
               else
                 env.logger.debug "#{@name} with id:#{@id}: Message is not harmony with onMessage or offMessage in config.json or with default values"
         )
-        
+
       super()
 
     onConnect: () ->
       if @config.stateTopic
-        @plugin.mqttclient.subscribe(@config.stateTopic, { qos: @config.qos })
+        @mqttclient.subscribe(@config.stateTopic, { qos: @config.qos })
 
     changeStateTo: (state) ->
       message = (if state then @config.onMessage else @config.offMessage)
-      @plugin.mqttclient.publish(@config.topic, message, { qos: @config.qos, retain: @config.retain })
+      @mqttclient.publish(@config.topic, message, { qos: @config.qos, retain: @config.retain })
       @_setState(state)
       return Promise.resolve()
 
     destroy: () ->
       if @config.stateTopic
-        @plugin.mqttclient.unsubscribe(@config.stateTopic)
+        @mqttclient.unsubscribe(@config.stateTopic)
       super()

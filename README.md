@@ -421,12 +421,12 @@ The Button Action Provider
 
 You can publish mqtt messages in rules with the action:
 
-`publish mqtt message "<string with variables>" on topic "<string with variables>" [qos: 0|1|2] [retain: true|false]`
+`publish mqtt message "<string with variables>" on topic "<string with variables>" [on broker ListOfBrokers] [qos: 0|1|2] [retain: true|false]`
 
     "rules": [
       {
         "id": "my-rule",
-        "rule": "if every 1 minutes then publish mqtt message \"some message\" on topic \"my/topic\" qos: 1 retain: true",
+        "rule": "when every 3 seconds then publish mqtt message \"msg\" on topic \"topic\" on broker default qos: 1 retain: true",
         "active": true,
         "logging": false,
         "name": "Publish mqtt"
@@ -444,7 +444,7 @@ You can publish mqtt messages in rules with the action:
 - [x] Buttons Device
 - [x] Configurable PWM range for Dimmer
 - [ ] Configurable CIE1931 correction for Dimmer
-- [ ] Support for more then one Broker
+- [x] Support for more then one Broker
 - [ ] Sending all variables from Pimatic to Broker/s
 - [ ] Control Pimatic over MQTT :)
 - [x] Integration with ActionProvider

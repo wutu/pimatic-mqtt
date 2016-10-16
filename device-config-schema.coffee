@@ -5,6 +5,10 @@ module.exports = {
     type: "object"
     extensions: ["xLink", "xConfirm", "xOnLabel", "xOffLabel"]
     properties:
+      brokerId:
+        description: "Id of the broker"
+        type: "string"
+        default: "default"
       topic:
         description: "Topic for control switch"
         type: "string"
@@ -35,6 +39,10 @@ module.exports = {
     type: "object"
     extensions: ["xLink"]
     properties:
+      brokerId:
+        description: "Id of the broker"
+        type: "string"
+        default: "default"
       topic:
         description: "Topic for control dimmer brightness"
         type: "string"
@@ -61,6 +69,10 @@ module.exports = {
     type: "object"
     extensions: ["xLink", "xAttributeOptions"]
     properties:
+      brokerId:
+        description: "Id of the broker"
+        type: "string"
+        default: "default"
       attributes:
         description: "Attributes of device"
         required: ["name", "topic", "type"]
@@ -117,6 +129,10 @@ module.exports = {
     extensions: ["xLink", "xPresentLabel", "xAbsentLabel"]
     required: ["topic"]
     properties:
+      brokerId:
+        description: "Id of the broker"
+        type: "string"
+        default: "default"
       topic:
         description: "Device state topic"
         type: "string"
@@ -140,6 +156,10 @@ module.exports = {
     extensions: ["xLink", "xOpenedLabel", "xClosedLabel"]
     required: ["topic"]
     properties:
+      brokerId:
+        description: "Id of the broker"
+        type: "string"
+        default: "default"
       topic:
         description: "Device state topic"
         type: "string"
@@ -162,6 +182,10 @@ module.exports = {
     type: "object"
     extensions: ["xLink"]
     properties:
+      brokerId:
+        description: "Id of the broker"
+        type: "string"
+        default: "default"
       buttons:
         description: "Buttons to display"
         type: "array"
