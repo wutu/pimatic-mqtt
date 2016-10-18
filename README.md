@@ -61,7 +61,7 @@ Configuration with two Brokers
         {
           "brokerId": "eclipse",
           "host": "iot.eclipse.org"
-        },
+        }
       ]
     }
 
@@ -69,10 +69,11 @@ The configuration for a broker is an object comprising the following properties.
 
 | Property            | Default     | Type    | Description                                                                             |
 |:--------------------|:------------|:--------|:----------------------------------------------------------------------------------------|
+| brokerId            | "default"   | String  | Id of the broker                                                                        |
 | host                | "127.0.0.1" | String  | Broker hostname or IP                                                                   |
 | port                | 1883        | Integer | Broker port                                                                             |
 | keepalive           | 180         | Integer | Keepalive in seconds                                                                    |
-| clientId            | pimatic*    | String  | *pimatic + random number generation or your own clientId                                |
+| clientId            | pimatic*    | String  | *pimatic + random number or your own clientId                                           |
 | protocolId          | "MQTT"      | String  | With broker that supports only MQTT 3.1 (not 3.1.1 compliant), you should pass "MQIsdp" |
 | protocolVer         | 4           | Integer | With broker that supports only MQTT 3.1 (not 3.1.1 compliant), you should pass 3        |
 | cleanSession        | true        | Boolean | Set to false to receive QoS 1 and 2 messages while offline                              |
