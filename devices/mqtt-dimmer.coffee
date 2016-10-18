@@ -1,29 +1,33 @@
 module.exports = (env) ->
 
   Promise = env.require 'bluebird'
+  assert = env.require 'cassert'
 
   class MqttDimmer extends env.devices.DimmerActuator
-  
+
     constructor: (@config, @plugin, lastState) ->
+      assert(@plugin.brokers[@config.brokerId])
+
       @name = @config.name
       @id = @config.id
       @_state = lastState?.state?.value or off
       @_dimlevel = lastState?.dimlevel?.value or 0
       @resolution = (@config.resolution - 1) or 255
+      @mqttclient = @plugin.brokers[@config.brokerId].client
 
-      if @plugin.connected
+      if @plugin.brokers[@config.brokerId].connected
         @onConnect()
 
-      @plugin.mqttclient.on('connect', =>
+      @mqttclient.on('connect', =>
         @onConnect()
       )
 
       if @config.stateTopic
-        @plugin.mqttclient.on 'message', (topic, message) =>
+        @mqttclient.on 'message', (topic, message) =>
           if @config.stateTopic == topic
             payload = message.toString()
             @getPerCentlevel(payload)
-            if @perCentlevel != @_dimlevel
+            if @perCentlevel != @_dimlevel && @perCentlevel <= 100
               @_setDimlevel(@perCentlevel)
               @emit @dimlevel, @perCentlevel
 
@@ -31,7 +35,7 @@ module.exports = (env) ->
 
     onConnect: () ->
       if @config.stateTopic
-        @plugin.mqttclient.subscribe(@config.stateTopic, { qos: @config.qos })
+        @mqttclient.subscribe(@config.stateTopic, { qos: @config.qos })
 
 
     # Convert the PWM resolution by config value
@@ -48,16 +52,16 @@ module.exports = (env) ->
 
     turnOn: ->
       @getDevLevel(100)
-      @plugin.mqttclient.publish(@config.topic, @devLevel, { qos: @config.qos, retain: @config.retain })
+      @mqttclient.publish(@config.topic, @devLevel, { qos: @config.qos, retain: @config.retain })
       return Promise.resolve()
-      
+
     turnOff: ->
-      @plugin.mqttclient.publish(@config.topic, 0, { qos: @config.qos, retain: @config.retain })
+      @mqttclient.publish(@config.topic, 0, { qos: @config.qos, retain: @config.retain })
       return Promise.resolve()
 
     changeDimlevelTo: (dimlevel) ->
       @getDevLevel(dimlevel)
-      @plugin.mqttclient.publish(@config.topic, @devLevel, { qos: @config.qos, retain: @config.retain })
+      @mqttclient.publish(@config.topic, @devLevel, { qos: @config.qos, retain: @config.retain })
       @_setDimlevel(dimlevel)
       return Promise.resolve()
 
@@ -65,5 +69,5 @@ module.exports = (env) ->
 
     destroy: () ->
      if @config.stateTopic
-       @plugin.mqttclient.unsubscribe(@config.stateTopic)
+       @mqttclient.unsubscribe(@config.stateTopic)
      super()
