@@ -24,10 +24,10 @@
   },
   "configSchema": "mqtt-config-schema.coffee",
   "peerDependencies": {
-    "pimatic": ">=0.8.0 <1.0.0"
+    "pimatic": ">=0.9.0 <1.0.0"
   },
   "dependencies": {
-    "mqtt": ">=1.1.x",
+    "mqtt": ">=2.0.0",
     "flat": ">=2.0.0"
   },
   "engines": {
