@@ -61,7 +61,7 @@ Configuration with two Brokers
         {
           "brokerId": "eclipse",
           "host": "iot.eclipse.org"
-        },
+        }
       ]
     }
 
