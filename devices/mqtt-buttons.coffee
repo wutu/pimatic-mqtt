@@ -12,7 +12,7 @@ module.exports = (env) ->
       @id = @config.id
       @mqttclient = @plugin.brokers[@config.brokerId].client
 
-      if @plugin.brokers[@config.brokerId].connected
+      if @mqttclient.connected
         @onConnect()
 
       @mqttclient.on('connect', =>

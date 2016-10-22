@@ -111,7 +111,7 @@ module.exports = {
               type: "boolean"
               default: false
             division:
-              description: "Should be set to true if the value does not change continuously over time."
+              description: "Constant that will divide the value obtained."
               type: "number"
               default: ""
             multiplier:
