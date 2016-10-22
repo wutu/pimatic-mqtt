@@ -13,7 +13,7 @@ module.exports = (env) ->
       @_state = lastState?.state?.value or off
       @mqttclient = @plugin.brokers[@config.brokerId].client
 
-      if @plugin.brokers[@config.brokerId].connected
+      if @mqttclient.connected
         @onConnect()
 
       @mqttclient.on('connect', =>

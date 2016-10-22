@@ -15,7 +15,7 @@ module.exports = (env) ->
       @resolution = (@config.resolution - 1) or 255
       @mqttclient = @plugin.brokers[@config.brokerId].client
 
-      if @plugin.brokers[@config.brokerId].connected
+      if @mqttclient.connected
         @onConnect()
 
       @mqttclient.on('connect', =>

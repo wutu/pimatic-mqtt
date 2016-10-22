@@ -48,7 +48,6 @@ module.exports = (env) ->
         broker = {
           id: brokerConfig.brokerId
           client: null
-          connected: false
         }
 
         options = (
@@ -79,28 +78,26 @@ module.exports = (env) ->
           mqttClient = new mqtt.connect(options)
           id = broker.id
           mqttClient.on("connect", () =>
-            env.logger.info "Successfully connected to MQTT Broker #{id}"
-            broker.connected = true
             resolve()
           )
           mqttClient.on('error', reject)
 
           broker.client = mqttClient
 
-          broker.client.on 'reconnect', () =>
+          mqttClient.on "connect", () =>
+            env.logger.info "Successfully connected to MQTT Broker #{id}"
+
+          mqttClient.on 'reconnect', () =>
             env.logger.info "Reconnecting to MQTT Broker #{id}"
 
-          broker.client.on 'offline', () =>
-            broker.connected = false
+          mqttClient.on 'offline', () =>
             env.logger.info "MQTT Broker #{id} is offline"
 
-          broker.client.on 'error', (error) ->
-            broker.connected = false
+          mqttClient.on 'error', (error) ->
             env.logger.error "Broker #{id} connection error: #{error}"
             env.logger.debug error.stack
 
-          broker.client.on 'close', () ->
-            broker.connected = false
+          mqttClient.on 'close', () ->
             env.logger.debug "Connection with MQTT Broker #{id} was closed"
         )
 
