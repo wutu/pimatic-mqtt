@@ -19,11 +19,10 @@ module.exports = (env) ->
         @onConnect()
       )
 
-      for b in @config.buttons
-        if b.stateTopic
-          @mqttclient.on 'message', (topic, message) =>
-            if b.stateTopic == topic
-              payload = message.toString()
+      @mqttclient.on 'message', (topic, message) =>
+        for b in @config.buttons
+          if b.stateTopic == topic
+            payload = message.toString()
             if payload == b.message
               @emit 'button', b.id
 
