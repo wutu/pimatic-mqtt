@@ -47,8 +47,8 @@ module.exports = (env) ->
 
     # Convert device resolution value back to percent value
     getPerCentlevel: (devlevel) ->
-      hrubyperCentlevel = ((devlevel * 100) / @resolution).toFixed(0)
-      @perCentlevel = parseInt(hrubyperCentlevel, 10)
+      perCentlevel = ((devlevel * 100) / @resolution).toFixed(0)
+      @perCentlevel = parseInt(perCentlevel, 10)
       return @perCentlevel
 
     turnOn: ->
