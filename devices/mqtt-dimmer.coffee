@@ -10,6 +10,7 @@ module.exports = (env) ->
 
       @name = @config.name
       @id = @config.id
+      @message = @config.message
       @_state = lastState?.state?.value or off
       @_dimlevel = lastState?.dimlevel?.value or 0
       @resolution = (@config.resolution - 1) or 255
@@ -25,7 +26,7 @@ module.exports = (env) ->
       if @config.stateTopic
         @mqttclient.on 'message', (topic, message) =>
           if @config.stateTopic == topic
-            payload = message.toString()
+            payload = Number(message)
             @getPerCentlevel(payload)
             if @perCentlevel != @_dimlevel && @perCentlevel <= 100
               @_setDimlevel(@perCentlevel)
@@ -61,7 +62,8 @@ module.exports = (env) ->
 
     changeDimlevelTo: (dimlevel) ->
       @getDevLevel(dimlevel)
-      @mqttclient.publish(@config.topic, @devLevel, { qos: @config.qos, retain: @config.retain })
+      @payload = @message.replace("value", "#{@devLevel}")
+      @mqttclient.publish(@config.topic, @payload, { qos: @config.qos, retain: @config.retain })
       @_setDimlevel(dimlevel)
       return Promise.resolve()
 

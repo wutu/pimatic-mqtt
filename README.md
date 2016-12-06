@@ -367,12 +367,13 @@ The following predicates are supported:
       "stateTopic": "wemosd1r2/pcapwm/5/state",
       "resolution": 4096
     },
-    {
-      "name": "MQTT Dimmer",
-      "id": "mqtt-dimmer",
+        {
+      "topic": "dimmer/cmd",
+      "resolution": 1024,
+      "id": "dimmer",
+      "name": "Dimmer",
       "class": "MqttDimmer",
-      "topic": "wemosd1r2/gpio/15/brightness",
-      "resolution": 256
+      "message": "pwm,15,value,2000"
     }
 
 It has the following configuration properties:
@@ -382,6 +383,7 @@ It has the following configuration properties:
 | brokerId   | "default" | String  | Id of the broker                 |
 | topic      | -         | String  | Topic for control dimmer brightness.             |
 | resolution | 256       | Integer | Resolution of this dimmer. For percent set 101. |
+| message    | "value"   | String  | Format for outgoing message. |
 | stateTopic | -         | String  | Topic that communicates state, if exists          |
 | qos        | 0         | Number  | The QoS level of the topic and stateTopic (if exist)           |
 | retain     | false     | Boolean | If the published message should have the retain flag on or not.           |

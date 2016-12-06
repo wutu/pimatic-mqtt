@@ -16,7 +16,7 @@
     "README.md",
     "LICENSE"
   ],
-  "version": "0.9.4",
+  "version": "0.9.5",
   "homepage": "http://github.com/wutu/pimatic-mqtt",
   "repository": {
     "type": "git",
@@ -31,8 +31,8 @@
     "flat": ">=2.0.0"
   },
   "engines": {
-    "node": ">0.8.x",
-    "npm": ">1.1.x"
+    "node": ">= 4",
+    "npm": ">= 2"
   },
   "bugs": {
     "url": "https://github.com/wutu/pimatic-mqtt/issues"
@@ -60,17 +60,10 @@
     "IoT"
   ],
   "license": "AGPL-3.0",
-  "_npmVersion": "2.1.5",
-  "_nodeVersion": "0.10.24",
-  "_npmUser": {
-    "name": "wutu",
-    "email": "reg@kail.cz"
-  },
   "maintainers": [
-    "wutu (https://github.com/wutu)"
-  ],
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  }
+    {
+      "name": "wutu",
+      "url": "https://github.com/wutu"
+    }
+  ]
 }

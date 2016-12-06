@@ -50,6 +50,10 @@ module.exports = {
         description: "Device resolution"
         type: "integer"
         default: 256
+      message:
+        description: "Format for outgoing messages"
+        type: "string"
+        default: "value"
       stateTopic:
         description: "Topic that communicates state, if exists"
         type: "string"
