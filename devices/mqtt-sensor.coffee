@@ -62,6 +62,10 @@ module.exports = (env) ->
                     payload = (Number(message) * attr.multiplier)
                     @setValue(payload, name)
                     return
+                  if attr.messageMap && attr.messageMap[message]
+                    payload = Number(attr.messageMap[message])
+                    @setValue(payload, name)
+                    return
                   else
                     payload = Number(message)
                     @setValue(payload, name)
