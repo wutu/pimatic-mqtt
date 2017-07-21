@@ -26,7 +26,7 @@ module.exports = (env) ->
       if @config.stateTopic
         @mqttclient.on 'message', (topic, message) =>
           if @config.stateTopic == topic
-            payload = Number(message)
+            payload = parseInt(message.toString(), 10);
             @getPerCentlevel(payload)
             if @perCentlevel != @_dimlevel && @perCentlevel <= 100
               @_setDimlevel(@perCentlevel)
