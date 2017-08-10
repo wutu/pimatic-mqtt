@@ -13,6 +13,7 @@ module.exports = (env) ->
     'mqtt-presence-sensor'
     'mqtt-contact-sensor'
     'mqtt-buttons'
+    'mqtt-shutter'
   ]
     # convert kebap-case to camel-case notation with first character capitalized
     className = device.replace /(^[a-z])|(\-[a-z])/g, ($1) -> $1.toUpperCase().replace('-','')
