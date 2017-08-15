@@ -38,6 +38,4 @@ module.exports = (env) ->
       return Promise.resolve()
 
     destroy: ->
-      if @config.stateTopic
-        @mqttclient.unsubscribe(@config.stateTopic)
       super()

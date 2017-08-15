@@ -10,11 +10,34 @@ module.exports = (env) ->
 
       @name = @config.name
       @id = @config.id
-      @rollingTime = @config.rollingTime
       @_position = lastState?.position?.value or 'stopped'
       @mqttclient = @plugin.brokers[@config.brokerId].client
 
+      if @mqttclient.connected
+        @onConnect()
+
+      @mqttclient.on('connect', =>
+        @onConnect()
+      )
+
+      if @config.stateTopic
+        @mqttclient.on 'message', (topic, message) =>
+          if @config.stateTopic == topic
+            switch message.toString()
+              when @config.upMessage
+                @_setPosition('up')
+              when @config.downMessage
+                @_setPosition('down')
+              when @config.stopMessage
+                @_setPosition('stopped')
+              else
+                env.logger.debug "#{@name} with id:#{@id} - Message is not in accordance with config."
+
       super()
+
+    onConnect: () ->
+      if @config.stateTopic
+        @mqttclient.subscribe(@config.stateTopic, { qos: @config.qos })
 
     moveToPosition: (position) ->
       if position is 'up' then payload = @config.upMessage else payload = @config.downMessage
