@@ -266,4 +266,43 @@ module.exports = {
         type: "boolean"
         default: false
   }
+  MqttInput: {
+    title: "MQTT InputDevice config"
+    type: "object"
+    extensions: ["xLink"]
+    properties:
+      brokerId:
+        description: "Id of the broker"
+        type: "string"
+        default: "default"
+      topic:
+        description: "Topic for control Shutter"
+        type: "string"
+      type:
+        description: "The type of the input"
+        type: "string"
+        default: "string"
+        enum: ["string", "number"]
+      min:
+        description: "Minimum value for numeric values"
+        type: "number"
+        required: false
+      max:
+        description: "Maximum value for numeric values"
+        type: "number"
+        required: false
+      step:
+        description: "Step size for minus and plus buttons for numeric values"
+        type: "number"
+        default: 1
+      qos:
+        description: "The QoS level of the topic and stateTopic(if exist). Default is 0 and also be used to publishing messages."
+        type: "number"
+        default: 0
+        enum: [0, 1, 2]
+      retain:
+        description: "If the published message should have the retain flag on or not."
+        type: "boolean"
+        default: false
+  }
 }
