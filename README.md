@@ -28,6 +28,8 @@ This version supports the following
 * ContactSensor
 * Dimmer
 * Buttons
+* Shutter
+* Input
 
 ## Sponsoring
 
