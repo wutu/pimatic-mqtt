@@ -16,16 +16,13 @@
     "README.md",
     "LICENSE"
   ],
-  "version": "0.9.7",
+  "version": "0.9.8",
   "homepage": "http://github.com/wutu/pimatic-mqtt",
   "repository": {
     "type": "git",
     "url": "git://github.com/wutu/pimatic-mqtt.git"
   },
   "configSchema": "mqtt-config-schema.coffee",
-  "peerDependencies": {
-    "pimatic": ">=0.9.0 <1.0.0"
-  },
   "dependencies": {
     "mqtt": ">=2.0.0",
     "flat": ">=2.0.0"
