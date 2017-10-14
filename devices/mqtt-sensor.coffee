@@ -90,7 +90,7 @@ module.exports = (env) ->
           }
 
           @attributes[name].description = name
-          @attributes[name].type = attr.type
+          @attributes[name].type = attr.type or 'number'
           @attributes[name].unit = attr.unit or ''
           @attributes[name].discrete = attr.discrete or false
           @attributes[name].acronym = attr.acronym or null
