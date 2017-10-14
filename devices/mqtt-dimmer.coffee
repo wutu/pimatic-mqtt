@@ -29,10 +29,13 @@ module.exports = (env) ->
           if @config.stateTopic == topic
             payload = parseInt(message.toString(), 10);
             @getPerCentlevel(payload)
-            if @perCentlevel != @_dimlevel && @perCentlevel <= 100
-              @_setDimlevel(@perCentlevel)
-              @_lastdimlevel = @perCentlevel
-              @emit @dimlevel, @perCentlevel
+            if @perCentlevel != @_dimlevel
+              if @perCentlevel <= 100
+                @_setDimlevel(@perCentlevel)
+                @_lastdimlevel = @perCentlevel
+                @emit @dimlevel, @perCentlevel
+              else
+                env.logger.error ("value: #{@perCentlevel} is out of range")
 
       super()
 
@@ -49,7 +52,7 @@ module.exports = (env) ->
 
     # Convert device resolution value back to percent value
     getPerCentlevel: (devlevel) ->
-      perCentlevel = ((devlevel * 100) / @resolution).toFixed(0)
+      perCentlevel = Math.ceil(((devlevel * 100) / @resolution))
       @perCentlevel = parseInt(perCentlevel, 10)
       return @perCentlevel
 
