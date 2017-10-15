@@ -2,6 +2,10 @@ module.exports = {
   title: "MQTT plugin config options"
   type: "object"
   properties:
+    debug:
+      description: "Debug mode. Writes debug messages to the pimatic log, if set to true."
+      type: "boolean"
+      default: false
     brokers:
       description: "List of MQTT brokers"
       type: "array"

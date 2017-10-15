@@ -65,13 +65,14 @@ module.exports = (env) ->
           reconnectPeriod: brokerConfig.reconnect
           connectTimeout: brokerConfig.timeout
           queueQoSZero: brokerConfig.queueQoSZero
-          ca: brokerConfig.ca
           certPath: brokerConfig.certPath
           keyPath: brokerConfig.keyPath
           rejectUnauthorized: brokerConfig.rejectUnauthorized
+          ca: brokerConfig.ca
+          debug: @config.debug
         )
 
-        if brokerConfig.ca and brokerConfig.certPath and brokerConfig.keyPath
+        if brokerConfig.ca or brokerConfig.certPath or brokerConfig.keyPath
           options.protocol = 'mqtts'
 
         mqttClient = null
@@ -104,6 +105,7 @@ module.exports = (env) ->
         )
 
         @brokers[brokerConfig.brokerId] = broker
+        env.logger.debug(broker)
 
 
       # register devices
@@ -122,7 +124,6 @@ module.exports = (env) ->
       # this closure is required to keep the className and classType context as part of the iteration
       return (config, lastState) =>
         return new classType(config, @, lastState)
-
 
   # ###Finally
   # Create a instance of my plugin

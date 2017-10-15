@@ -79,7 +79,7 @@ module.exports = {
         default: "default"
       attributes:
         description: "Attributes of device"
-        required: ["name", "topic", "type"]
+        required: ["name", "topic"]
         type: "array"
         default: []
         format: "table"
