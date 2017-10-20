@@ -81,4 +81,8 @@ module.exports = {
             description: "Path to the trusted CA list"
             type: "string"
             default: ""
+          ssl:
+            description: "Force the use of TLS/SSL"
+            type: "boolean"
+            default: false
 }
