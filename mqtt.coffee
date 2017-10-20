@@ -62,7 +62,7 @@ module.exports = (env) ->
           protocolId: brokerConfig.protocolId
           protocolVersion: brokerConfig.protocolVer
           clean: brokerConfig.cleanSession
-          reconnectPeriod: brokerConfig.reconnect
+          reconnectPeriod: brokerConfig.reconnect or 10000
           connectTimeout: brokerConfig.timeout
           queueQoSZero: brokerConfig.queueQoSZero
           certPath: brokerConfig.certPath
@@ -97,11 +97,11 @@ module.exports = (env) ->
             env.logger.info "MQTT Broker #{id} is offline"
 
           mqttClient.on 'error', (error) ->
-            env.logger.error "Broker #{id} connection error: #{error}"
+            env.logger.error "Broker #{id} #{error}"
             env.logger.debug error.stack
 
           mqttClient.on 'close', () ->
-            env.logger.debug "Connection with MQTT Broker #{id} was closed"
+            env.logger.info "Connection with MQTT Broker #{id} was closed"
         )
 
         @brokers[brokerConfig.brokerId] = broker

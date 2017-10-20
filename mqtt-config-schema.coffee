@@ -48,7 +48,7 @@ module.exports = {
           reconnect:
             description: "reconnectPeriod in milliseconds"
             type: "integer"
-            default: 5000
+            default: 10000
           timeout:
             description: "connectTimeout in milliseconds"
             type: "integer"
