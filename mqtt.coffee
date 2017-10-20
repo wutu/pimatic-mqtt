@@ -72,7 +72,7 @@ module.exports = (env) ->
           debug: @config.debug
         )
 
-        if brokerConfig.ca or brokerConfig.certPath or brokerConfig.keyPath
+        if brokerConfig.ca or brokerConfig.certPath or brokerConfig.keyPath or brokerConfig.ssl
           options.protocol = 'mqtts'
 
         mqttClient = null
