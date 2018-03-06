@@ -152,6 +152,12 @@ module.exports = {
         type: "number"
         default: 0
         enum: [0, 1, 2]
+      autoReset:
+        type: "boolean"
+        default: false
+      resetTime:
+        type: "integer"
+        default: 30000
   }
   MqttContactSensor: {
     title: "MqttContactSensor config options"
