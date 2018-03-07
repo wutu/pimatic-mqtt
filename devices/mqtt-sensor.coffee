@@ -15,8 +15,10 @@ module.exports = (env) ->
       @name = @config.name
       @id = @config.id
       @attributes = {}
-      @mqttvars = []
+      @mqttvars = {}
       @mqttclient = @plugin.brokers[@config.brokerId].client
+      
+      @attributeValue = {}
 
       if @mqttclient.connected
         @onConnect()
@@ -96,13 +98,9 @@ module.exports = (env) ->
           @attributes[name].acronym = attr.acronym or null
           @attributes[name].division = attr.division or null
           @attributes[name].multiplier = attr.multiplier or null
-
-          getter = ( =>
-            value = @mqttvars[attr.name]
-            Promise.resolve(value)
-          )
-
-          @_createGetter(name, getter)
+  
+          @mqttvars[name] = lastState?[name]?.value
+          @_createGetter name, ( => Promise.resolve @mqttvars[name] )
 
       super()
 
