@@ -3,6 +3,7 @@ module.exports = (env) ->
 
   mqtt = require 'mqtt'
   Promise = env.require 'bluebird'
+  pluginConfigDef = require './mqtt-config-schema'
 
   deviceTypes = {}
   for device in [
@@ -12,6 +13,8 @@ module.exports = (env) ->
     'mqtt-presence-sensor'
     'mqtt-contact-sensor'
     'mqtt-buttons'
+    'mqtt-shutter'
+    'mqtt-input'
   ]
     # convert kebap-case to camel-case notation with first character capitalized
     className = device.replace /(^[a-z])|(\-[a-z])/g, ($1) -> $1.toUpperCase().replace('-','')
@@ -23,62 +26,87 @@ module.exports = (env) ->
   # Pimatic MQTT Plugin class
   class MqttPlugin extends env.plugins.Plugin
 
+    # transfer config - from single Broker to multiple Brokers
+    prepareConfig: (config) =>
+      try
+        if not config.brokers?
+          keys = Object.keys pluginConfigDef.properties.brokers.items.properties
+          broker = {}
+          keys.forEach (key) =>
+            if config[key]?
+              broker[key] = config[key]
+              delete config[key]
+          config.brokers = []
+          broker["brokerId"] = "default"
+          config.brokers.push broker
+      catch error
+        env.logger.error "Unable to migrate config: " + error
+
     init: (app, @framework, @config) =>
-  
-      @connected = false
 
-      options = (
-        host: @config.host
-        port: @config.port
-        username: @config.username
-        password: if @config.password then new Buffer(@config.password) else false
-        keepalive: @config.keepalive
-        clientId: @config.clientId or 'pimatic_' + Math.random().toString(16).substr(2, 8)
-        protocolId: @config.protocolId
-        protocolVersion: @config.protocolVer
-        clean: @config.cleanSession
-        reconnectPeriod: @config.reconnect
-        connectTimeout: @config.timeout
-        queueQoSZero: @config.queueQoSZero
-        ca: @config.ca
-        certPath: @config.certPath
-        keyPath: @config.keyPath
-        rejectUnauthorized: @config.rejectUnauthorized
-      )
+      @brokers = { }
 
-      if @config.ca and @config.certPath and @config.keyPath
-        options.protocol = 'mqtts'
+      for brokerConfig in @config.brokers
+        broker = {
+          id: brokerConfig.brokerId
+          client: null
+        }
 
-      Connection = new Promise( (resolve, reject) =>
-        @mqttclient = new mqtt.connect(options)
-        @mqttclient.on("connect", () =>
-          @connected = true
-          env.logger.info "Successfully connected to MQTT Broker"
-          resolve()
+        options = (
+          host: brokerConfig.host
+          port: brokerConfig.port
+          username: brokerConfig.username
+          password: if brokerConfig.password then new Buffer(brokerConfig.password) else false
+          keepalive: brokerConfig.keepalive
+          clientId: brokerConfig.clientId or 'pimatic_' + Math.random().toString(16).substr(2, 8)
+          protocolId: brokerConfig.protocolId
+          protocolVersion: brokerConfig.protocolVer
+          clean: brokerConfig.cleanSession
+          reconnectPeriod: brokerConfig.reconnect or 10000
+          connectTimeout: brokerConfig.timeout
+          queueQoSZero: brokerConfig.queueQoSZero
+          certPath: brokerConfig.certPath
+          keyPath: brokerConfig.keyPath
+          rejectUnauthorized: brokerConfig.rejectUnauthorized
+          ca: brokerConfig.ca
+          debug: @config.debug
         )
-        @mqttclient.on('error', reject)
-        return
-      ).timeout(60000).catch( (error) ->
-        env.logger.error "Error on connecting to MQTT Broker #{error.message}"
-        env.logger.debug error.stack
-        return
-      )
 
-      @mqttclient.on 'reconnect', () =>
-        env.logger.info "Reconnecting to MQTT Broker"
+        if brokerConfig.ca or brokerConfig.certPath or brokerConfig.keyPath or brokerConfig.ssl
+          options.protocol = 'mqtts'
 
-      @mqttclient.on 'offline', () ->
-        @connected = false
-        env.logger.info "MQTT Broker is offline"
+        mqttClient = null
 
-      @mqttclient.on 'error', (error) ->
-        @connected = false
-        env.logger.error "connection error: #{error}"
-        env.logger.debug error.stack
+        Connection = new Promise( (resolve, reject) =>
+          mqttClient = new mqtt.connect(options)
+          id = broker.id
+          mqttClient.on("connect", () =>
+            resolve()
+          )
+          mqttClient.on('error', reject)
 
-      @mqttclient.on 'close', () ->
-        @connected = false
-        env.logger.debug "Connection with MQTT Broker was closed"
+          broker.client = mqttClient
+
+          mqttClient.on "connect", () =>
+            env.logger.info "Successfully connected to MQTT Broker #{id}"
+
+          mqttClient.on 'reconnect', () =>
+            env.logger.info "Reconnecting to MQTT Broker #{id}"
+
+          mqttClient.on 'offline', () =>
+            env.logger.info "MQTT Broker #{id} is offline"
+
+          mqttClient.on 'error', (error) ->
+            env.logger.error "Broker #{id} #{error}"
+            env.logger.debug error.stack
+
+          mqttClient.on 'close', () ->
+            env.logger.info "Connection with MQTT Broker #{id} was closed"
+        )
+
+        @brokers[brokerConfig.brokerId] = broker
+        env.logger.debug(broker)
+
 
       # register devices
       deviceConfigDef = require("./device-config-schema")
@@ -90,13 +118,12 @@ module.exports = (env) ->
           createCallback: @callbackHandler(className, classType)
         })
 
-      @framework.ruleManager.addActionProvider(new MqttActionProvider(@framework, @mqttclient))
+      @framework.ruleManager.addActionProvider(new MqttActionProvider(@framework, @))
 
     callbackHandler: (className, classType) ->
       # this closure is required to keep the className and classType context as part of the iteration
       return (config, lastState) =>
         return new classType(config, @, lastState)
-
 
   # ###Finally
   # Create a instance of my plugin

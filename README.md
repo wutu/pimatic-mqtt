@@ -28,6 +28,14 @@ This version supports the following
 * ContactSensor
 * Dimmer
 * Buttons
+* Shutter
+* Input
+
+## Sponsoring
+
+Do you like this plugin? Then please consider a donation to support the development.
+
+<span class="badge-paypal"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7K4NWJJPGV5MA" title="Donate to this project using Paypal"><img src="https://img.shields.io/badge/paypal-donate-yellow.svg" alt="PayPal Donate Button" /></a></span>
 
 ## Getting Started
 
@@ -39,39 +47,41 @@ While run MQTT broker on localhost and on a standard port, without autentificati
 in the `plugins` section.
 
     {
-        "plugin": "mqtt"
+      "plugin": "mqtt",
+      "active": true,
+      "brokers": [
+        {
+          "brokerId": "default"
+        }
+      ]
     }
 
-Full config
+Configuration with two Brokers
 
     {
       "plugin": "mqtt",
-      "host": "broker.lan",
-      "port": 1883,
-      "keepalive": 180,
-      "clientId": "Pimatic_B",
-      "protocolId": "MQTT",
-      "protocolVer": 4,
-      "cleanSession": true,
-      "reconnect": 5000,
-      "timeout": 30000,
-      "queueQoSZero": true,
-      "username": "test",
-      "password": "mqtt"
-      "certPath": "/home/user/ca.crt"
-      "keyPath": "/home/user/ca.key"
-      "rejectUnauthorized": true
-      "ca": "/home/user/ca.pem"
+      "active": true,
+      "brokers": [
+        {
+          "brokerId": "default"
+          "host": "localhost"
+        },
+        {
+          "brokerId": "eclipse",
+          "host": "iot.eclipse.org"
+        }
+      ]
     }
 
 The configuration for a broker is an object comprising the following properties.
 
 | Property            | Default     | Type    | Description                                                                             |
 |:--------------------|:------------|:--------|:----------------------------------------------------------------------------------------|
+| brokerId            | "default"   | String  | Id of the broker                                                                        |
 | host                | "127.0.0.1" | String  | Broker hostname or IP                                                                   |
 | port                | 1883        | Integer | Broker port                                                                             |
 | keepalive           | 180         | Integer | Keepalive in seconds                                                                    |
-| clientId            | pimatic*    | String  | *pimatic + random number generation or your own clientId                                |
+| clientId            | pimatic*    | String  | *pimatic + random number or your own clientId                                           |
 | protocolId          | "MQTT"      | String  | With broker that supports only MQTT 3.1 (not 3.1.1 compliant), you should pass "MQIsdp" |
 | protocolVer         | 4           | Integer | With broker that supports only MQTT 3.1 (not 3.1.1 compliant), you should pass 3        |
 | cleanSession        | true        | Boolean | Set to false to receive QoS 1 and 2 messages while offline                              |
@@ -234,17 +244,18 @@ Sample mqtt message: {"kodi_details": {"title": "", "fanart": "", "label": "The.
 
 It has the following configuration properties:
 
-| Property   | Default  | Type    | Description                                 |
-|:-----------|:---------|:--------|:--------------------------------------------|
-| topic      | -        | String  | Topic for device state           |
-| qos        | 0        | Number  | The QoS level of the topic and stateTopic (if exist)           |
-| type       | "number" | String  | The type of the variable(string or number)                 |
-| unit       | -        | String  | Attribute unit                  |
-| acronym    | -        | String  | Acronym to show as value label in the frontend          |
-| discrete   | false    | Boolean | Should be set to true if the value does not change continuously over time.          |
-| division   | -        | Number  | Constants that will divide the value obtained          |
-| multiplier | -        | Number  | Constant that will multiply the value obtained          |
-| messageMap | -        | Object  | Even Pimatic 9, you must manually configure this. We're working on it.          |
+| Property   | Default   | Type    | Description                                 |
+|:-----------|:----------|:--------|:--------------------------------------------|
+| brokerId   | "default" | String  | Id of the broker                 |
+| topic      | -         | String  | Topic for device state           |
+| qos        | 0         | Number  | The QoS level of the topic and stateTopic (if exist)           |
+| type       | "number"  | String  | The type of the variable(string or number)                 |
+| unit       | -         | String  | Attribute unit                  |
+| acronym    | -         | String  | Acronym to show as value label in the frontend          |
+| discrete   | false     | Boolean | Should be set to true if the value does not change continuously over time.          |
+| division   | -         | Number  | Constants that will divide the value obtained          |
+| multiplier | -         | Number  | Constant that will multiply the value obtained          |
+| messageMap | -         | Object  | Even Pimatic 9, you must manually configure this. We're working on it.          |
 
 ### Switch Device
 
@@ -262,14 +273,15 @@ It has the following configuration properties:
 
 It has the following configuration properties:
 
-| Property   | Default  | Type    | Description                                 |
-|:-----------|:---------|:--------|:--------------------------------------------|
-| topic      | -        | String  | Topic for device state           |
-| onMessage  | "1"      | String  | Message to switch on                  |
-| offMessage | "0"      | String  | Message to switch off                  |
-| stateTopic | -        | String  | Topic that communicates state, if exists          |
-| qos        | 0        | Number  | The QoS level of the topic and stateTopic (if exist)           |
-| retain     | false    | Boolean | If the published message should have the retain flag on or not.           |
+| Property   | Default   | Type    | Description                                 |
+|:-----------|:----------|:--------|:--------------------------------------------|
+| brokerId   | "default" | String  | Id of the broker                 |
+| topic      | -         | String  | Topic for device state           |
+| onMessage  | "1"       | String  | Message to switch on                  |
+| offMessage | "0"       | String  | Message to switch off                  |
+| stateTopic | -         | String  | Topic that communicates state, if exists          |
+| qos        | 0         | Number  | The QoS level of the topic and stateTopic (if exist)           |
+| retain     | false     | Boolean | If the published message should have the retain flag on or not.           |
 
 
 Device exhibits the following attributes:
@@ -299,12 +311,13 @@ The following predicates and actions are supported:
 
 It has the following configuration properties:
 
-| Property   | Default  | Type    | Description                                 |
-|:-----------|:---------|:--------|:--------------------------------------------|
-| topic      | -        | String  | Topic for device state           |
-| onMessage  | "1"      | String  | Message that invokes positive status                  |
-| offMessage | "0"      | String  | Message that invokes negative status                  |
-| qos        | 0        | Number  | The QoS level of the topic and stateTopic (if exist)           |
+| Property   | Default   | Type    | Description                                 |
+|:-----------|:----------|:--------|:--------------------------------------------|
+| brokerId   | "default" | String  | Id of the broker                 |
+| topic      | -         | String  | Topic for device state           |
+| onMessage  | "1"       | String  | Message that invokes positive status                  |
+| offMessage | "0"       | String  | Message that invokes negative status                  |
+| qos        | 0         | Number  | The QoS level of the topic and stateTopic (if exist)           |
 
 The presence sensor exhibits the following attributes:
 
@@ -331,12 +344,13 @@ The following predicates are supported:
 
 It has the following configuration properties:
 
-| Property   | Default  | Type    | Description                                 |
-|:-----------|:---------|:--------|:--------------------------------------------|
-| topic      | -        | String  | Topic for device state           |
-| onMessage  | "1"      | String  | Message that invokes positive status                  |
-| offMessage | "0"      | String  | Message that invokes negative status                  |
-| qos        | 0        | Number  | The QoS level of the topic and stateTopic (if exist)           |
+| Property   | Default   | Type    | Description                                 |
+|:-----------|:----------|:--------|:--------------------------------------------|
+| brokerId   | "default" | String  | Id of the broker                 |
+| topic      | -         | String  | Topic for device state           |
+| onMessage  | "1"       | String  | Message that invokes positive status                  |
+| offMessage | "0"       | String  | Message that invokes negative status                  |
+| qos        | 0         | Number  | The QoS level of the topic and stateTopic (if exist)           |
 
 The presence sensor exhibits the following attributes:
 
@@ -361,23 +375,26 @@ The following predicates are supported:
       "stateTopic": "wemosd1r2/pcapwm/5/state",
       "resolution": 4096
     },
-    {
-      "name": "MQTT Dimmer",
-      "id": "mqtt-dimmer",
+        {
+      "topic": "dimmer/cmd",
+      "resolution": 1024,
+      "id": "dimmer",
+      "name": "Dimmer",
       "class": "MqttDimmer",
-      "topic": "wemosd1r2/gpio/15/brightness",
-      "resolution": 256
+      "message": "pwm,15,value,2000"
     }
 
 It has the following configuration properties:
 
-| Property   | Default  | Type    | Description                                 |
-|:-----------|:---------|:--------|:--------------------------------------------------|
-| topic      | -        | String  | Topic for control dimmer brightness.             |
-| resolution | 256      | Integer | Resolution of this dimmer. For percent set 101. |
-| stateTopic | -        | String  | Topic that communicates state, if exists          |
-| qos        | 0        | Number  | The QoS level of the topic and stateTopic (if exist)           |
-| retain     | false    | Boolean | If the published message should have the retain flag on or not.           |
+| Property   | Default   | Type    | Description                                 |
+|:-----------|:----------|:--------|:--------------------------------------------------|
+| brokerId   | "default" | String  | Id of the broker                 |
+| topic      | -         | String  | Topic for control dimmer brightness.             |
+| resolution | 256       | Integer | Resolution of this dimmer. For percent set 101. |
+| message    | "value"   | String  | Format for outgoing message. |
+| stateTopic | -         | String  | Topic that communicates state, if exists          |
+| qos        | 0         | Number  | The QoS level of the topic and stateTopic (if exist)           |
+| retain     | false     | Boolean | If the published message should have the retain flag on or not.           |
 
 The Dimmer Action Provider:
 
@@ -403,15 +420,16 @@ The Dimmer Action Provider:
 
 It has the following configuration properties for each button:
 
-| Property   | Default  | Type    | Description                                 |
-|:-----------|:---------|:--------|:--------------------------------------------|
-| id         | -        | String  | Button id          |
-| text       | -        | String  | Button text          |
-| topic      | -        | String  | Topic for device state           |
-| message    | -        | String  | Publish message when pressed              |
-| stateTopic | -        | String  | Topic that communicates state, if exists          |
-| qos        | 0        | Number  | The QoS level of the topic and stateTopic (if exist)           |
-| confirm    | false    | Boolean | Ask the user to confirm the button press           |
+| Property   | Default   | Type    | Description                                 |
+|:-----------|:----------|:--------|:--------------------------------------------|
+| brokerId   | "default" | String  | Id of the broker                 |
+| id         | -         | String  | Button id          |
+| text       | -         | String  | Button text          |
+| topic      | -         | String  | Topic for device state           |
+| message    | -         | String  | Publish message when pressed              |
+| stateTopic | -         | String  | Topic that communicates state, if exists          |
+| qos        | 0         | Number  | The QoS level of the topic and stateTopic (if exist)           |
+| confirm    | false     | Boolean | Ask the user to confirm the button press           |
 
 The Button Action Provider
 
@@ -421,12 +439,12 @@ The Button Action Provider
 
 You can publish mqtt messages in rules with the action:
 
-`publish mqtt message "<string with variables>" on topic "<string with variables>" [qos: 0|1|2] [retain: true|false]`
+`publish mqtt message "<string with variables>" on topic "<string with variables>" [on broker ListOfBrokers] [qos: 0|1|2] [retain: true|false]`
 
     "rules": [
       {
         "id": "my-rule",
-        "rule": "if every 1 minutes then publish mqtt message \"some message\" on topic \"my/topic\" qos: 1 retain: true",
+        "rule": "when every 3 seconds then publish mqtt message \"msg\" on topic \"topic\" on broker default qos: 1 retain: true",
         "active": true,
         "logging": false,
         "name": "Publish mqtt"
@@ -444,7 +462,7 @@ You can publish mqtt messages in rules with the action:
 - [x] Buttons Device
 - [x] Configurable PWM range for Dimmer
 - [ ] Configurable CIE1931 correction for Dimmer
-- [ ] Support for more then one Broker
+- [x] Support for more then one Broker
 - [ ] Sending all variables from Pimatic to Broker/s
 - [ ] Control Pimatic over MQTT :)
 - [x] Integration with ActionProvider

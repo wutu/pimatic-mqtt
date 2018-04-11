@@ -1,62 +1,85 @@
+
 module.exports = (env) ->
 
   Promise = env.require 'bluebird'
   flatten = require 'flat'
+  assert = env.require 'cassert'
 
-  # Code comes from the module pimatic-mqtt-simple. The author is Andre Miller (https://github.com/andremiller).
+  # Original code comes from the module pimatic-mqtt-simple.
+  # The author is Andre Miller (https://github.com/andremiller).
   class MqttSensor extends env.devices.Sensor
 
     constructor: (@config, @plugin) ->
+      assert(@plugin.brokers[@config.brokerId])
+
       @name = @config.name
       @id = @config.id
       @attributes = {}
       @mqttvars = []
+      @mqttclient = @plugin.brokers[@config.brokerId].client
 
-      if @plugin.connected
+      if @mqttclient.connected
         @onConnect()
 
-      @plugin.mqttclient.on('connect', =>
+      @mqttclient.on('connect', =>
         @onConnect()
       )
 
-       
-      @plugin.mqttclient.on('message', (topic, message) =>
+      @mqttclient.on('message', (topic, message) =>
         for attr, i in @config.attributes
           do (attr) =>
             if attr.topic == topic
-              @mqttvars[topic] = message.toString()
+              name = attr.name
               try data = JSON.parse(message)
               if typeof data is 'object' and Object.keys(data).length != 0
                 flat = flatten(data)
-                for key, value of flat
-                  if key == attr.name
+                for key, data of flat
+                  if key == name
                     if attr.type == 'number'
                       if attr.division
-                        @emit attr.name, Number("#{value}") / attr.division
+                        payload = Number("#{data}") / attr.division
+                        @setValue(payload, name)
                         return
                       if attr.multiplier
-                        @emit attr.name, Number("#{value}") * attr.multiplier
+                        payload = Number("#{data}") * attr.multiplier
+                        @setValue(payload, name)
                         return
                       else
-                        @emit attr.name, Number("#{value}")
+                        payload = Number("#{data}")
+                        @setValue(payload, name)
+                        return
                     else
-                      @emit attr.name, "#{value}"
+                      payload = ("#{data}")
+                      @setValue(payload, name)
+                      return
               else
                 if attr.type == 'number'
                   if attr.division
-                    @emit attr.name, Number(message) / attr.division
+                    payload = (Number(message) / attr.division)
+                    @setValue(payload, name)
                     return
                   if attr.multiplier
-                    @emit attr.name, Number(message) * attr.multiplier
+                    payload = (Number(message) * attr.multiplier)
+                    @setValue(payload, name)
+                    return
+                  if attr.messageMap && attr.messageMap[message]
+                    payload = Number(attr.messageMap[message])
+                    @setValue(payload, name)
                     return
                   else
-                    @emit attr.name, Number(message)
+                    payload = Number(message)
+                    @setValue(payload, name)
+                    return
                 else
                   if attr.messageMap && attr.messageMap[message]
-                    @emit attr.name, attr.messageMap[message]
+                    payload = attr.messageMap[message]
+                    @setValue(payload, name)
                     return
                   else
-                    @emit attr.name, message.toString()
+                    payload = message.toString()
+                    @setValue(payload, name)
+                    return
+
       )
 
       for attr, i in @config.attributes
@@ -67,16 +90,15 @@ module.exports = (env) ->
           }
 
           @attributes[name].description = name
-          @attributes[name].type = attr.type
+          @attributes[name].type = attr.type or 'number'
           @attributes[name].unit = attr.unit or ''
           @attributes[name].discrete = attr.discrete or false
           @attributes[name].acronym = attr.acronym or null
+          @attributes[name].division = attr.division or null
+          @attributes[name].multiplier = attr.multiplier or null
 
           getter = ( =>
-            if attr.type == 'number'
-              value = Number(@mqttvars[attr.topic])
-            else
-              value = @mqttvars[attr.topic]
+            value = @mqttvars[attr.name]
             Promise.resolve(value)
           )
 
@@ -84,15 +106,19 @@ module.exports = (env) ->
 
       super()
 
+    setValue: (payload, name) ->
+        @mqttvars[name] = payload
+        @emit name, payload
+
     onConnect: () ->
       # Subscribe to the topics
       for attr, i in @config.attributes
         do (attr) =>
           _qos = attr.qos or 0
-          @plugin.mqttclient.subscribe(attr.topic, { qos: _qos })
+          @mqttclient.subscribe(attr.topic, { qos: _qos })
 
     destroy: () ->
      for attr, i in @config.attributes
         do (attr) =>
-          @plugin.mqttclient.unsubscribe(attr.topic)
+          @mqttclient.unsubscribe(attr.topic)
      super()
