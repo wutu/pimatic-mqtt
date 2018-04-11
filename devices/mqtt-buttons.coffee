@@ -33,9 +33,8 @@ module.exports = (env) ->
       for b in @config.buttons
         if b.id is buttonId
           @emit 'button', b.id
-          @mqttclient.publish(b.topic, b.message, { qos: b.qos or 0 })
-          return
-
+          @plugin.mqttclient.publish(b.topic, b.message, { qos: b.qos or 0 })
+          return Promise.resolve()
 
     onConnect: () ->
       for b in @config.buttons
