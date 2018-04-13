@@ -20,8 +20,15 @@ module.exports = (env) ->
         @onConnect()
       )
 
+      resetPresence = ( =>
+        @_setPresence(no)
+      )
+
       @mqttclient.on('message', (topic, message) =>
         if @config.topic == topic
+          clearTimeout(@_resetPresenceTimeout)
+          if @config.autoReset is true
+            @_resetPresenceTimeout = setTimeout(resetPresence, @config.resetTime)
           switch message.toString()
             when @config.onMessage
                @_setPresence(yes)
