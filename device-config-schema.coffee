@@ -153,9 +153,11 @@ module.exports = {
         default: 0
         enum: [0, 1, 2]
       autoReset:
+        description: "Reset the state to absent after resetTime"
         type: "boolean"
         default: false
       resetTime:
+        description: "Time (in ms) after which the presence value is reseted to absent."
         type: "integer"
         default: 30000
   }
