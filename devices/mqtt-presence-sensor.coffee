@@ -26,9 +26,6 @@ module.exports = (env) ->
 
       @mqttclient.on('message', (topic, message) =>
         if @config.topic == topic
-          clearTimeout(@_resetPresenceTimeout)
-          if @config.autoReset is true
-            @_resetPresenceTimeout = setTimeout(resetPresence, @config.resetTime)
           switch message.toString()
             when @config.onMessage
                @_setPresence(yes)
@@ -36,6 +33,9 @@ module.exports = (env) ->
                @_setPresence(no)
             else
               env.logger.debug "#{@name} with id:#{@id}: Message is not harmony with onMessage or offMessage in config.json or with default values"
+          clearTimeout(@_resetPresenceTimeout)
+          if @config.autoReset and @_presence
+            @_resetPresenceTimeout = setTimeout(resetPresence, @config.resetTime)
         )
       super()
 
