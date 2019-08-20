@@ -435,7 +435,7 @@ The Button Action Provider
 
 * press [the] device
 
-##Rules
+## Rules
 
 You can publish mqtt messages in rules with the action:
 
@@ -448,6 +448,20 @@ You can publish mqtt messages in rules with the action:
         "active": true,
         "logging": false,
         "name": "Publish mqtt"
+      }
+    ]
+
+You can trigger rules by mqtt messages with the predicate:
+
+`mqtt received "<message>" on topic "<topic>" [via broker ListOfBrokers] [qos: 0|1|2]`
+
+    "rules": [
+      {
+        "id": "my-rule-2",
+        "name": "Receive mqtt",
+        "rule": "when mqtt received \"1\" on topic \"topic\" via broker default qos: 0 then log \"Yeah!\"",
+        "active": true,
+        "logging": true
       }
     ]
 

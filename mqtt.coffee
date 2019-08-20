@@ -22,6 +22,7 @@ module.exports = (env) ->
 
   # import preadicares and actions
   MqttActionProvider = require('./predicates_and_actions/mqtt_action')(env)
+  MqttPredicateProvider = require('./predicates_and_actions/mqtt_predicate')(env)
 
   # Pimatic MQTT Plugin class
   class MqttPlugin extends env.plugins.Plugin
@@ -119,6 +120,7 @@ module.exports = (env) ->
         })
 
       @framework.ruleManager.addActionProvider(new MqttActionProvider(@framework, @))
+      @framework.ruleManager.addPredicateProvider(new MqttPredicateProvider(@framework, @))
 
     callbackHandler: (className, classType) ->
       # this closure is required to keep the className and classType context as part of the iteration
