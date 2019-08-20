@@ -157,7 +157,7 @@ module.exports = {
         type: "boolean"
         default: false
       resetTime:
-        description: "Time (in ms) after which the presence value is reseted to absent."
+        description: "Time (in ms) after which the presence value is reset to absent."
         type: "integer"
         default: 30000
   }
