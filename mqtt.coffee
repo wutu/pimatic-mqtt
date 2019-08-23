@@ -56,8 +56,6 @@ module.exports = (env) ->
         options = (
           host: brokerConfig.host
           port: brokerConfig.port
-          username: brokerConfig.username
-          password: if brokerConfig.password then new Buffer(brokerConfig.password) else false
           keepalive: brokerConfig.keepalive
           clientId: brokerConfig.clientId or 'pimatic_' + Math.random().toString(16).substr(2, 8)
           protocolId: brokerConfig.protocolId
@@ -72,6 +70,9 @@ module.exports = (env) ->
           ca: brokerConfig.ca
           debug: @config.debug
         )
+        if brokerConfig.username? and brokerConfig.username isnt ""
+          options.username = brokerConfig.username
+          options.password = if brokerConfig.password then new Buffer(brokerConfig.password) else false
 
         if brokerConfig.ca or brokerConfig.certPath or brokerConfig.keyPath or brokerConfig.ssl
           options.protocol = 'mqtts'
