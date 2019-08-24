@@ -3,6 +3,7 @@ module.exports = (env) ->
   Promise = env.require 'bluebird'
   assert = env.require 'cassert'
   match = require 'mqtt-wildcard'
+  flatten = require 'flat'
 
   class MqttSwitch extends env.devices.PowerSwitch
 
@@ -11,6 +12,8 @@ module.exports = (env) ->
 
       @name = @config.name
       @id = @config.id
+      super()
+
       @_state = lastState?.state?.value or off
       @mqttclient = @plugin.brokers[@config.brokerId].client
 
@@ -22,22 +25,29 @@ module.exports = (env) ->
       )
 
       if @config.stateTopic
+        triggerState = (value) =>
+          switch value
+            when @config.onMessage
+              @_setState(on)
+            when @config.offMessage
+              @_setState(off)
+            else
+              env.logger.debug "#{@name} with id:#{@id}: Message is not harmony with onMessage or offMessage in config.json or with default values"
+
         @mqttclient.on('message', (topic, message) =>
           if match(topic, @config.stateTopic)?
-            switch message.toString()
-              when @config.onMessage
-                @_setState(on)
-                @_state = on
-                @emit "state", on
-              when @config.offMessage
-                @_setState(off)
-                @_state = off
-                @emit "state", off
-              else
-                env.logger.debug "#{@name} with id:#{@id}: Message is not harmony with onMessage or offMessage in config.json or with default values"
+            try data = JSON.parse(message) if @config.stateValueKey?
+            if typeof data is 'object' and Object.keys(data).length != 0
+              flat = flatten(data)
+              for key, data of flat
+                if key == @config.stateValueKey
+                  triggerState("#{data}")
+                  found = true
+              if not found
+                env.logger.debug "{@name} with id:#{@id}: State topic payload does not contain the given key #{@config.stateValueKey}"
+            else
+              triggerState(message.toString())
         )
-
-      super()
 
     onConnect: () ->
       if @config.stateTopic

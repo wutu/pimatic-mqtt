@@ -24,6 +24,10 @@ module.exports = {
         description: "Topic that communicates state, if exists"
         type: "string"
         default: ""
+      stateValueKey:
+        description: "The key or path to the state value, given that the payload contain a JSON object"
+        type: "string"
+        required: false
       qos:
         description: "The QoS level of the topic and stateTopic(if exist). Default is 0 and also be used to publishing messages."
         type: "number"
