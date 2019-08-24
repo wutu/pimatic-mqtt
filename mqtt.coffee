@@ -4,6 +4,7 @@ module.exports = (env) ->
   mqtt = require 'mqtt'
   Promise = env.require 'bluebird'
   pluginConfigDef = require './mqtt-config-schema'
+  configProperties = pluginConfigDef.properties.brokers.items.properties
 
   deviceTypes = {}
   for device in [
@@ -31,7 +32,7 @@ module.exports = (env) ->
     prepareConfig: (config) =>
       try
         if not config.brokers?
-          keys = Object.keys pluginConfigDef.properties.brokers.items.properties
+          keys = Object.keys configProperties
           broker = {}
           keys.forEach (key) =>
             if config[key]?
@@ -49,7 +50,7 @@ module.exports = (env) ->
 
       for brokerConfig in @config.brokers
         broker = {
-          id: brokerConfig.brokerId
+          id: brokerConfig.brokerId ? configProperties.brokerId.default
           client: null
         }
 
