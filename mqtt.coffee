@@ -107,7 +107,7 @@ module.exports = (env) ->
             env.logger.info "Connection with MQTT Broker #{id} was closed"
         )
 
-        @brokers[brokerConfig.brokerId] = broker
+        @brokers[broker.id] = broker
         env.logger.debug(broker)
 
 
