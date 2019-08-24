@@ -143,6 +143,10 @@ module.exports = {
       topic:
         description: "Device state topic"
         type: "string"
+      stateValueKey:
+        description: "The key or path to the state value, given that the payload contain a JSON object"
+        type: "string"
+        required: false
       onMessage:
         description: "Message that invokes positive status"
         type: "string"
