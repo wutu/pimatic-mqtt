@@ -32,7 +32,7 @@ module.exports = (env) ->
             when @config.offMessage
               @_setState(off)
             else
-              env.logger.debug "#{@name} with id:#{@id}: Message is not harmony with onMessage or offMessage in config.json or with default values"
+              env.logger.debug "#{@name} with id:#{@id}: Message is not in harmony with onMessage or offMessage in config.json or with default values"
 
         @mqttclient.on('message', (topic, message) =>
           if match(topic, @config.stateTopic)?
