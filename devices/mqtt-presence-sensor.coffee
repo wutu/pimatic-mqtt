@@ -2,6 +2,7 @@ module.exports = (env) ->
 
   Promise = env.require 'bluebird'
   assert = env.require 'cassert'
+  match = require 'mqtt-wildcard'
 
   class MqttPresenceSensor extends env.devices.PresenceSensor
 
@@ -24,7 +25,7 @@ module.exports = (env) ->
       )
 
       @mqttclient.on('message', (topic, message) =>
-        if @config.topic == topic
+        if match(topic, @config.topic)?
           if @_resetPresenceTimeout?
             clearTimeout(@_resetPresenceTimeout)
             @_resetPresenceTimeout = null

@@ -2,6 +2,7 @@ module.exports = (env) ->
 
   Promise = env.require 'bluebird'
   assert = env.require 'cassert'
+  match = require 'mqtt-wildcard'
 
   class MqttButtons extends env.devices.ButtonsDevice
 
@@ -21,7 +22,7 @@ module.exports = (env) ->
 
       @mqttclient.on 'message', (topic, message) =>
         for b in @config.buttons
-          if b.stateTopic == topic
+          if match(topic, b.stateTopic)?
             payload = message.toString()
             if payload == b.message
               @emit 'button', b.id

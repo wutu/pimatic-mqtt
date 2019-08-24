@@ -2,6 +2,7 @@ module.exports = (env) ->
 
   Promise = env.require 'bluebird'
   assert = env.require 'cassert'
+  match = require 'mqtt-wildcard'
 
   class MqttSwitch extends env.devices.PowerSwitch
 
@@ -22,7 +23,7 @@ module.exports = (env) ->
 
       if @config.stateTopic
         @mqttclient.on('message', (topic, message) =>
-          if @config.stateTopic ==  topic
+          if match(topic, @config.stateTopic)?
             switch message.toString()
               when @config.onMessage
                 @_setState(on)

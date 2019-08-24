@@ -2,6 +2,7 @@ module.exports = (env) ->
 
   Promise = env.require 'bluebird'
   assert = env.require 'cassert'
+  match = require 'mqtt-wildcard'
 
   class MqttDimmer extends env.devices.DimmerActuator
 
@@ -26,7 +27,7 @@ module.exports = (env) ->
 
       if @config.stateTopic
         @mqttclient.on 'message', (topic, message) =>
-          if @config.stateTopic == topic
+          if match(topic, @config.stateTopic)?
             payload = parseInt(message.toString(), 10);
             @getPerCentlevel(payload)
             if @perCentlevel != @_dimlevel

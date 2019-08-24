@@ -2,6 +2,7 @@ module.exports = (env) ->
 
   Promise = env.require 'bluebird'
   assert = env.require 'cassert'
+  match = require 'mqtt-wildcard'
 
   class MqttContactSensor extends env.devices.ContactSensor
 
@@ -21,7 +22,7 @@ module.exports = (env) ->
       )
 
       @mqttclient.on('message', (topic, message) =>
-        if @config.topic == topic
+        if match(topic, @config.topic)?
           switch message.toString()
             when @config.onMessage
               @_setContact(true)

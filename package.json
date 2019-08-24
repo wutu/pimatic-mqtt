@@ -27,8 +27,9 @@
     "pimatic": ">=0.9.0 <1.0.0"
   },
   "dependencies": {
+    "flat": ">=2.0.0",
     "mqtt": ">=2.0.0",
-    "flat": ">=2.0.0"
+    "mqtt-wildcard": "^3.0.9"
   },
   "engines": {
     "node": ">= 4",

@@ -4,6 +4,7 @@ module.exports = (env) ->
   Promise = env.require 'bluebird'
   flatten = require 'flat'
   assert = env.require 'cassert'
+  match = require 'mqtt-wildcard'
 
   # Original code comes from the module pimatic-mqtt-simple.
   # The author is Andre Miller (https://github.com/andremiller).
@@ -30,7 +31,7 @@ module.exports = (env) ->
       @mqttclient.on('message', (topic, message) =>
         for attr, i in @config.attributes
           do (attr) =>
-            if attr.topic == topic
+            if match(topic, attr.topic)?
               name = attr.name
               try data = JSON.parse(message)
               if typeof data is 'object' and Object.keys(data).length != 0
