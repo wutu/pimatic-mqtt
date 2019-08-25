@@ -280,6 +280,7 @@ It has the following configuration properties:
 | onMessage  | "1"       | String  | Message to switch on                  |
 | offMessage | "0"       | String  | Message to switch off                  |
 | stateTopic | -         | String  | Topic that communicates state, if exists          |
+| stateValueKey | -      | String  | The key or path to the state value, given that the payload contains a JSON object |
 | qos        | 0         | Number  | The QoS level of the topic and stateTopic (if exist)           |
 | retain     | false     | Boolean | If the published message should have the retain flag on or not.           |
 
@@ -315,6 +316,7 @@ It has the following configuration properties:
 |:-----------|:----------|:--------|:--------------------------------------------|
 | brokerId   | "default" | String  | Id of the broker                 |
 | topic      | -         | String  | Topic for device state           |
+| stateValueKey | -      | String  | The key or path to the state value, given that the payload contains a JSON object |
 | onMessage  | "1"       | String  | Message that invokes positive status                  |
 | offMessage | "0"       | String  | Message that invokes negative status                  |
 | qos        | 0         | Number  | The QoS level of the topic and stateTopic (if exist)           |
@@ -348,6 +350,7 @@ It has the following configuration properties:
 |:-----------|:----------|:--------|:--------------------------------------------|
 | brokerId   | "default" | String  | Id of the broker                 |
 | topic      | -         | String  | Topic for device state           |
+| stateValueKey | -      | String  | The key or path to the state value, given that the payload contains a JSON object |
 | onMessage  | "1"       | String  | Message that invokes positive status                  |
 | offMessage | "0"       | String  | Message that invokes negative status                  |
 | qos        | 0         | Number  | The QoS level of the topic and stateTopic (if exist)           |
@@ -393,6 +396,7 @@ It has the following configuration properties:
 | resolution | 256       | Integer | Resolution of this dimmer. For percent set 101. |
 | message    | "value"   | String  | Format for outgoing message. |
 | stateTopic | -         | String  | Topic that communicates state, if exists          |
+| stateValueKey | -      | String  | The key or path to the state value, given that the payload contains a JSON object |
 | qos        | 0         | Number  | The QoS level of the topic and stateTopic (if exist)           |
 | retain     | false     | Boolean | If the published message should have the retain flag on or not.           |
 
@@ -428,6 +432,7 @@ It has the following configuration properties for each button:
 | topic      | -         | String  | Topic for device state           |
 | message    | -         | String  | Publish message when pressed              |
 | stateTopic | -         | String  | Topic that communicates state, if exists          |
+| stateValueKey | -      | String  | The key or path to the state value, given that the payload contains a JSON object |
 | qos        | 0         | Number  | The QoS level of the topic and stateTopic (if exist)           |
 | confirm    | false     | Boolean | Ask the user to confirm the button press           |
 
@@ -467,10 +472,12 @@ You can trigger rules by mqtt messages with the predicate:
 
 ## To Do
 
+'x' marks done To Do items
+
 - [ ] Add RGB device
 - [x] Reflecting external condition for dimmer
 - [x] Reflecting external condition for buttons
-- [x] QoS and ratain flag
+- [x] QoS and retain flag
 - [x] Processing JSON-encoded object
 - [x] Make payload configurable for all device
 - [x] Buttons Device
@@ -481,8 +488,9 @@ You can trigger rules by mqtt messages with the predicate:
 - [ ] Control Pimatic over MQTT :)
 - [x] Integration with ActionProvider
 - [x] TLS support
-- [ ] Add shutter device
-- [ ] Add text and numeric input device
+- [x] Add shutter device
+- [x] Add text and numeric input device
+- [x] JSON filtering for state values
 
 ## Credits
 
