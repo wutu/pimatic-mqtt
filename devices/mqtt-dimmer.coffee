@@ -3,6 +3,7 @@ module.exports = (env) ->
   Promise = env.require 'bluebird'
   assert = env.require 'cassert'
   match = require 'mqtt-wildcard'
+  flatten = require 'flat'
 
   class MqttDimmer extends env.devices.DimmerActuator
 
@@ -11,10 +12,11 @@ module.exports = (env) ->
 
       @name = @config.name
       @id = @config.id
+      super()
+
       @message = @config.message
       @_state = lastState?.state?.value or off
       @_dimlevel = lastState?.dimlevel?.value or 0
-      @_lastdimlevel = lastState?.lastdimlevel?.value or 100
       @resolution = (@config.resolution - 1) or 255
       @mqttclient = @plugin.brokers[@config.brokerId].client
 
@@ -26,19 +28,27 @@ module.exports = (env) ->
       )
 
       if @config.stateTopic
+        triggerDimlevel = (value) =>
+          payload = parseInt(value, 10);
+          percentLevel = @getPercentLevel(payload)
+          if percentLevel != @_dimlevel
+            if percentLevel <= 100
+              @_setDimlevel(percentLevel)
+            else
+              env.logger.error ("value: #{percentLevel} is out of range")
+
         @mqttclient.on 'message', (topic, message) =>
           if match(topic, @config.stateTopic)?
-            payload = parseInt(message.toString(), 10);
-            @getPerCentlevel(payload)
-            if @perCentlevel != @_dimlevel
-              if @perCentlevel <= 100
-                @_setDimlevel(@perCentlevel)
-                @_lastdimlevel = @perCentlevel
-                @emit @dimlevel, @perCentlevel
-              else
-                env.logger.error ("value: #{@perCentlevel} is out of range")
-
-      super()
+            try data = JSON.parse(message) if @config.stateValueKey?
+            if typeof data is 'object' and Object.keys(data).length != 0
+              for key, data of flatten(data)
+                if key == @config.stateValueKey
+                  triggerDimlevel("#{data}")
+                  found = true
+              if not found
+                env.logger.debug "{@name} with id:#{@id}: State topic payload does not contain the given key #{@config.stateValueKey}"
+            else
+              triggerDimlevel(message.toString())
 
     onConnect: () ->
       if @config.stateTopic
@@ -46,21 +56,19 @@ module.exports = (env) ->
 
 
     # Convert the PWM resolution by config value
-    # Suppport for CIE correction will be added latter
-    getDevLevel: (perCentlevel) ->
-      @devLevel = (perCentlevel * (@resolution / 100)).toFixed(0)
-      return @devLevel
+    # Support for CIE correction will be added latter
+    getDevLevel: (percentLevel) ->
+      return (percentLevel * (@resolution / 100)).toFixed(0)
 
     # Convert device resolution value back to percent value
-    getPerCentlevel: (devlevel) ->
-      perCentlevel = Math.ceil(((devlevel * 100) / @resolution))
-      @perCentlevel = parseInt(perCentlevel, 10)
-      return @perCentlevel
+    getPercentLevel: (devLevel) ->
+      percentLevel = Math.ceil((devLevel * 100) / @resolution)
+      return parseInt(percentLevel, 10)
 
     turnOn: ->
-      @getDevLevel(@_lastdimlevel)
-      @mqttclient.publish(@config.topic, @devLevel, { qos: @config.qos, retain: @config.retain })
-      @_setDimlevel(@_lastdimlevel)
+      level = @getDevLevel(100)
+      @mqttclient.publish(@config.topic, level, { qos: @config.qos, retain: @config.retain })
+      @_setDimlevel(100)
       return Promise.resolve()
 
     turnOff: ->
@@ -70,10 +78,9 @@ module.exports = (env) ->
 
     changeDimlevelTo: (dimlevel) ->
       if @_dimlevel is dimlevel then return Promise.resolve true
-      @getDevLevel(dimlevel)
-      @payload = @message.replace("value", "#{@devLevel}")
+      level = @getDevLevel(dimlevel)
+      @payload = @message.replace("value", "#{level}")
       @mqttclient.publish(@config.topic, @payload, { qos: @config.qos, retain: @config.retain })
-      @_lastdimlevel = dimlevel
       @_setDimlevel(dimlevel)
       return Promise.resolve()
 

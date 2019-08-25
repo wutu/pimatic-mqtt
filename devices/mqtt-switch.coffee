@@ -38,8 +38,7 @@ module.exports = (env) ->
           if match(topic, @config.stateTopic)?
             try data = JSON.parse(message) if @config.stateValueKey?
             if typeof data is 'object' and Object.keys(data).length != 0
-              flat = flatten(data)
-              for key, data of flat
+              for key, data of flatten(data)
                 if key == @config.stateValueKey
                   triggerState("#{data}")
                   found = true
