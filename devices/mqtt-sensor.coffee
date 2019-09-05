@@ -10,7 +10,7 @@ module.exports = (env) ->
   # The author is Andre Miller (https://github.com/andremiller).
   class MqttSensor extends env.devices.Sensor
 
-    constructor: (@config, @plugin) ->
+    constructor: (@config, @plugin, lastState) ->
       assert(@plugin.brokers[@config.brokerId])
 
       @name = @config.name
@@ -99,8 +99,14 @@ module.exports = (env) ->
           @attributes[name].acronym = attr.acronym or null
           @attributes[name].division = attr.division or null
           @attributes[name].multiplier = attr.multiplier or null
-  
+
           @mqttvars[name] = lastState?[name]?.value
+          if not @mqttvars[name]?
+            switch attr.unit
+              when 'number' then @mqttvars[name] = 0
+              when 'boolean' then @mqttvars[name] = false
+              else @mqttvars[name] = ''
+
           @_createGetter name, ( => Promise.resolve @mqttvars[name] )
 
       super()
