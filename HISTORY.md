@@ -1,10 +1,15 @@
 # Release History
 
-* unreleased
+* 20190906, V0.9.13
+    * Fixture: Add lastValue parameter to MqttSensor constructor to be able to restore 
+      attributes from database on startup
+    * Added default initialization for MqttSensor attributes values in case the values cannot be 
+      restored from database
+    * Added experimental device discovery for Tasmota switch and dimmer devices, issue #42
     * Added support for wildcards (#/+) on state topics, issue #11
-    * Added JSON filtering for MqttSwitch state values, issue #34
-    * Added JSON filtering for MqttPresenceSensor state values, issue #45
-    * Added JSON filtering for MqttDimmer, MqttButtons, MqttContactSensor, and MqttShutter 
+    * Added JSON payload filtering for MqttSwitch state values, issue #34
+    * Added JSON payload filtering for MqttPresenceSensor state values, issue #45
+    * Added JSON payload filtering for MqttDimmer, MqttButtons, MqttContactSensor, and MqttShutter 
       state values
     * Added recovery of last state from database for MqttButtons device on startup
     * Added support for displaying the status (last button pressed) for MqttButtons device, issue #43
