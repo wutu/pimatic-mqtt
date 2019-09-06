@@ -2,6 +2,7 @@
 module.exports = (env) ->
 
   mqtt = require 'mqtt'
+  match = require 'mqtt-wildcard'
   Promise = env.require 'bluebird'
   pluginConfigDef = require './mqtt-config-schema'
   configProperties = pluginConfigDef.properties.brokers.items.properties
@@ -21,7 +22,7 @@ module.exports = (env) ->
     className = device.replace /(^[a-z])|(\-[a-z])/g, ($1) -> $1.toUpperCase().replace('-','')
     deviceTypes[className] = require('./devices/' + device)(env)
 
-  # import preadicares and actions
+  # import predicates and actions
   MqttActionProvider = require('./predicates_and_actions/mqtt_action')(env)
   MqttPredicateProvider = require('./predicates_and_actions/mqtt_predicate')(env)
 
@@ -124,10 +125,77 @@ module.exports = (env) ->
       @framework.ruleManager.addActionProvider(new MqttActionProvider(@framework, @))
       @framework.ruleManager.addPredicateProvider(new MqttPredicateProvider(@framework, @))
 
+      @framework.deviceManager.on('discover', (eventData) =>
+        @framework.deviceManager.discoverMessage 'pimatic-mqtt', 'Searching for devices'
+        _seen = {}
+        seen = (topic, deviceType) ->
+          if _seen[topic]?
+            if _seen[topic].hasOwnProperty deviceType
+              return true
+          else
+            _seen[topic] = {}
+          _seen[topic][deviceType] = ''
+          return false
+
+        for id, broker of @brokers
+          client = broker.client
+
+          onConnect = () =>
+            client.subscribe('stat/+/RESULT', { qos: 0 })
+
+          client.on('message', (topic, message) =>
+            env.logger.debug "New message", topic, message.toString()
+            if match(topic, 'stat/+/RESULT')?
+              try data = JSON.parse(message)
+              if typeof data is 'object' and Object.keys(data).length != 0
+                if data.Dimmer? and not seen(topic, 'Dimmer')
+                  device =
+                    class: 'MqttDimmer'
+                    name: 'MqttDimmer ' + topic
+                    brokerId: broker.id
+                    stateTopic: topic
+                    stateValueKey: 'Dimmer'
+                    topic: "cmnd/#{topic.match(/stat\/(\w+)\/RESULT/)?[1]}/DIMMER"
+                    resolution: 100
+
+                  process.nextTick(
+                    @_discoveryCallbackHandler('pimatic-mqtt', device.name, device)
+                  )
+
+                if data.POWER? and not seen(topic, 'POWER')
+                  device =
+                    class: 'MqttSwitch'
+                    name: 'MqttSwitch ' + topic
+                    brokerId: broker.id
+                    stateTopic: topic
+                    stateValueKey: 'POWER'
+                    topic: "cmnd/#{topic.match(/stat\/(\w+)\/RESULT/)?[1]}/POWER"
+                    onMessage: 'ON'
+                    offMessage: 'OFF'
+
+                  process.nextTick(
+                    @_discoveryCallbackHandler('pimatic-mqtt', device.name, device)
+                  )
+          )
+
+          if client.connected
+            onConnect()
+          else
+            @mqttclient.on('connect', => onConnect())
+
+          setTimeout ->
+            client.unsubscribe('stat/+/RESULT')
+          , eventData.time
+      )
+
     callbackHandler: (className, classType) ->
       # this closure is required to keep the className and classType context as part of the iteration
       return (config, lastState) =>
         return new classType(config, @, lastState)
+
+    _discoveryCallbackHandler: (pluginName, deviceName, deviceConfig) ->
+      return () =>
+        @framework.deviceManager.discoveredDevice pluginName, deviceName, deviceConfig
 
   # ###Finally
   # Create a instance of my plugin
